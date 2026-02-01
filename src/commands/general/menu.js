@@ -12,74 +12,69 @@ export default {
   permissions: ["all"],
 
   execute: async (m, { args }) => {
-    const requestedCategory = args[0]?.toLowerCase();
-    const commands = Object.values(plugins);
+  const commands = Object.values(plugins)
 
-    const categories = {};
-    for (const cmd of commands) {
-      const cat = cmd.category || "general";
-      if (!categories[cat]) categories[cat] = [];
-      categories[cat].push(cmd);
+  // group by category
+  const categories = {}
+  for (const cmd of commands) {
+    const cat = (cmd.category || "general").toLowerCase()
+    if (!categories[cat]) categories[cat] = []
+    categories[cat].push(cmd)
+  }
+
+  // header
+  let text =
+`Hai ${m.pushName || "User"} 👋
+Uptime : ${Function.formatUptime(process.uptime())}
+Prefix : ${m.prefix}\n`
+
+  const requested = args[0]?.toLowerCase()
+
+  // === MENU PER CATEGORY ===
+  if (requested) {
+    const list = categories[requested]
+    if (!list) {
+      return m.reply(
+`Category "${requested}" tidak ditemukan.
+
+Category tersedia:
+${Object.keys(categories).sort().map(c => `• ${c}`).join("\n")}`
+      )
     }
 
-    let menuText =
-`┌────────────────────────
-│        AKANE BOT
-├────────────────────────
-│ User   : ${m.pushName || "User"}
-│ Uptime : ${Function.formatUptime(process.uptime())}
-│ Prefix : ${m.prefix}
-└────────────────────────\n`;
+    text += `\n╭───「 ${requested.toUpperCase()} 」\n`
+    for (const cmd of list.sort((a, b) =>
+      a.command[0].localeCompare(b.command[0])
+    )) {
+      const name = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command
+      text += `│ • ${m.prefix}${name}\n`
+    }
+    text += `╰──────────────`
 
-    // jika minta kategori tertentu
-    if (requestedCategory) {
-      const list = categories[requestedCategory];
-      if (!list) {
-        return m.reply(
-`Category "${requestedCategory}" tidak ditemukan.
+    return m.reply(text)
+  }
 
-Daftar category:
-${Object.keys(categories).map(c => `- ${c}`).join("\n")}`
-        );
-      }
+  // === MENU UTAMA ===
+  for (const cat of Object.keys(categories).sort()) {
+    const list = categories[cat]
+      .map(cmd => Array.isArray(cmd.command) ? cmd.command[0] : cmd.command)
+      .sort()
 
-      menuText += `\n[ ${requestedCategory.toUpperCase()} ]\n`;
-
-      for (const cmd of list) {
-        const name = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
-        const prefix = cmd.prefix === false ? "" : m.prefix;
-        const aliases = cmd.aliases?.length ? ` (${cmd.aliases.join(", ")})` : "";
-
-        menuText += `\n${prefix}${name}${aliases}`;
-        if (cmd.description) menuText += `\n  ${cmd.description}`;
-        if (cmd.usage) menuText += `\n  Example: ${cmd.usage.replace("!", m.prefix)}`;
-        if (cmd.cooldown) menuText += `\n  Cooldown: ${cmd.cooldown}s`;
-        menuText += "\n";
-      }
-
-      return m.reply(menuText);
+    // bikin 3 command per baris
+    const rows = []
+    for (let i = 0; i < list.length; i += 3) {
+      rows.push(
+        list.slice(i, i + 3).map(c => `${c}`).join("   ")
+      )
     }
 
-    // menu utama semua kategori
-    menuText += `\nCOMMAND LIST\n`;
+    text += `\n╭───「 ${cat.toUpperCase()} 」\n`
+    rows.forEach(r => text += `│ • ${r}\n`)
+    text += `╰──────────────\n`
+  }
 
-    for (const [category, list] of Object.entries(categories).sort()) {
-      const cmds = list
-        .map(cmd => {
-          const name = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
-          return `${m.prefix}${name}\n`;
-        })
-        .join(", ");
+  text += `\nKetik:\n${m.prefix}menu <category>\nContoh:\n${m.prefix}menu download`
 
-      menuText += `\n${category}
-  ${cmds}\n`;
-    }
-
-    menuText +=
-`\nUse:
-${m.prefix}menu <category>
-to show detailed commands in a category.`;
-
-    await m.reply(menuText);
-  },
+  await m.reply(text)
+}
 };

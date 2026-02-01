@@ -1,65 +1,71 @@
 <!-- Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-    <h1 class="text-3xl font-bold text-white">Dashboard Overview</h1>
-    <button onclick="refreshDashboard()" class="flex items-center space-x-2 bg-dark-800 hover:bg-dark-700 text-white px-4 py-2 rounded-lg border border-dark-600 transition-colors">
-        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-        <span>Refresh</span>
+    <h1 class="section-title !mb-0">Dashboard Overview</h1>
+    <button onclick="refreshDashboard()" class="btn-secondary">
+        <div class="flex items-center space-x-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Refresh</span>
+        </div>
     </button>
 </div>
 
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6 rounded-xl shadow-lg">
+    <!-- Total Messages Card -->
+    <div class="stat-card bg-gradient-to-br from-blue-500 to-blue-600">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-blue-100 text-sm font-medium">Total Messages</p>
+                <p class="text-blue-100 text-sm font-medium mb-1">Total Messages</p>
                 <p class="text-white text-3xl font-bold" id="totalMessages">
                     <%= stats.totalMessages || 0 %>
                 </p>
             </div>
-            <div class="bg-blue-500 bg-opacity-30 p-3 rounded-lg">
+            <div class="stat-icon bg-blue-400/30">
                 <i data-lucide="message-circle" class="w-8 h-8 text-white"></i>
             </div>
         </div>
     </div>
 
-    <div class="bg-gradient-to-r from-green-600 to-emerald-600 p-6 rounded-xl shadow-lg">
+    <!-- Active Users Card -->
+    <div class="stat-card bg-gradient-to-br from-emerald-500 to-green-600">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-green-100 text-sm font-medium">Active Users</p>
+                <p class="text-green-100 text-sm font-medium mb-1">Active Users</p>
                 <p class="text-white text-3xl font-bold" id="activeUsers">
                     <%= stats.activeUsers || 0 %>
                 </p>
             </div>
-            <div class="bg-green-500 bg-opacity-30 p-3 rounded-lg">
+            <div class="stat-icon bg-green-400/30">
                 <i data-lucide="users" class="w-8 h-8 text-white"></i>
             </div>
         </div>
     </div>
 
-    <div class="bg-gradient-to-r from-yellow-600 to-orange-600 p-6 rounded-xl shadow-lg">
+    <!-- Uptime Card -->
+    <div class="stat-card bg-gradient-to-br from-orange-500 to-orange-600">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-yellow-100 text-sm font-medium">Uptime</p>
+                <p class="text-orange-100 text-sm font-medium mb-1">Uptime</p>
                 <p class="text-white text-3xl font-bold" id="uptime">
                     <%= Math.floor((stats.uptime || 0) / 3600) %>h
                 </p>
             </div>
-            <div class="bg-yellow-500 bg-opacity-30 p-3 rounded-lg">
+            <div class="stat-icon bg-orange-400/30">
                 <i data-lucide="clock" class="w-8 h-8 text-white"></i>
             </div>
         </div>
     </div>
 
-    <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-xl shadow-lg">
+    <!-- Memory Usage Card -->
+    <div class="stat-card bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-purple-100 text-sm font-medium">Memory Usage</p>
+                <p class="text-purple-100 text-sm font-medium mb-1">Memory Usage</p>
                 <p class="text-white text-3xl font-bold" id="memoryUsage">
                     <%= Math.round((stats.memoryUsage?.heapUsed || 0) / 1024 / 1024) %>MB
                 </p>
             </div>
-            <div class="bg-purple-500 bg-opacity-30 p-3 rounded-lg">
+            <div class="stat-icon bg-purple-400/30">
                 <i data-lucide="cpu" class="w-8 h-8 text-white"></i>
             </div>
         </div>
@@ -67,26 +73,26 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="bg-dark-800 rounded-xl border border-dark-700 p-6 mb-8">
+<div class="card mb-8">
     <div class="flex items-center space-x-2 mb-6">
-        <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
-        <h2 class="text-xl font-semibold text-white">Quick Actions</h2>
+        <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i>
+        <h2 class="text-xl font-semibold text-[rgb(var(--color-text-primary))]">Quick Actions</h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <button onclick="restartBot()" class="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors">
-            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        <button onclick="restartBot()" class="action-btn bg-blue-500 hover:bg-blue-600">
+            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
             <span>Restart Bot</span>
         </button>
-        <button onclick="showSendMessageModal()" class="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-colors">
-            <i data-lucide="send" class="w-4 h-4"></i>
+        <button onclick="showSendMessageModal()" class="action-btn bg-green-500 hover:bg-green-600">
+            <i data-lucide="send" class="w-5 h-5"></i>
             <span>Send Message</span>
         </button>
-        <button onclick="reloadPlugins()" class="flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded-lg transition-colors">
-            <i data-lucide="puzzle" class="w-4 h-4"></i>
+        <button onclick="reloadPlugins()" class="action-btn bg-purple-500 hover:bg-purple-600">
+            <i data-lucide="puzzle" class="w-5 h-5"></i>
             <span>Reload Plugins</span>
         </button>
-        <button onclick="showQRCode()" class="flex items-center justify-center space-x-2 bg-orange-600 hover:bg-orange-700 text-white py-3 px-4 rounded-lg transition-colors">
-            <i data-lucide="qr-code" class="w-4 h-4"></i>
+        <button onclick="showQRCode()" class="action-btn bg-orange-500 hover:bg-orange-600">
+            <i data-lucide="qr-code" class="w-5 h-5"></i>
             <span>Show QR Code</span>
         </button>
     </div>
@@ -94,47 +100,49 @@
 
 <!-- System Information & Activity -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6">
+    <!-- System Information -->
+    <div class="card">
         <div class="flex items-center space-x-2 mb-6">
-            <i data-lucide="info" class="w-5 h-5 text-blue-400"></i>
-            <h2 class="text-xl font-semibold text-white">System Information</h2>
+            <i data-lucide="info" class="w-5 h-5 text-blue-500"></i>
+            <h2 class="text-xl font-semibold text-[rgb(var(--color-text-primary))]">System Information</h2>
         </div>
         <div class="space-y-4">
-            <div class="flex justify-between">
-                <span class="text-dark-300">Node.js Version:</span>
-                <span class="text-white"><%= process.version %></span>
+            <div class="flex justify-between items-center">
+                <span class="text-[rgb(var(--color-text-secondary))]">Node.js Version:</span>
+                <span class="text-[rgb(var(--color-text-primary))] font-medium"><%= process.version %></span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-dark-300">Platform:</span>
-                <span class="text-white"><%= process.platform %></span>
+            <div class="flex justify-between items-center">
+                <span class="text-[rgb(var(--color-text-secondary))]">Platform:</span>
+                <span class="text-[rgb(var(--color-text-primary))] font-medium capitalize"><%= process.platform %></span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-dark-300">Architecture:</span>
-                <span class="text-white"><%= process.arch %></span>
+            <div class="flex justify-between items-center">
+                <span class="text-[rgb(var(--color-text-secondary))]">Architecture:</span>
+                <span class="text-[rgb(var(--color-text-primary))] font-medium"><%= process.arch %></span>
             </div>
             <div>
-                <div class="flex justify-between mb-2">
-                    <span class="text-dark-300">Memory Usage:</span>
-                    <span class="text-white">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[rgb(var(--color-text-secondary))]">Memory Usage:</span>
+                    <span class="text-[rgb(var(--color-text-primary))] font-medium">
                         <%= Math.round((stats.memoryUsage?.heapUsed || 0) / 1024 / 1024) %>MB / 
                         <%= Math.round((stats.memoryUsage?.heapTotal || 0) / 1024 / 1024) %>MB
                     </span>
                 </div>
-                <div class="w-full bg-dark-700 rounded-full h-2">
-                    <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                <div class="w-full bg-[rgb(var(--color-bg-primary))] rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
                          style="width: <%= Math.round((stats.memoryUsage?.heapUsed || 0) / (stats.memoryUsage?.heapTotal || 1) * 100) %>%"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6">
+    <!-- Real-time Activity -->
+    <div class="card">
         <div class="flex items-center space-x-2 mb-6">
-            <i data-lucide="activity" class="w-5 h-5 text-green-400"></i>
-            <h2 class="text-xl font-semibold text-white">Real-time Activity</h2>
+            <i data-lucide="activity" class="w-5 h-5 text-green-500"></i>
+            <h2 class="text-xl font-semibold text-[rgb(var(--color-text-primary))]">Real-time Activity</h2>
         </div>
         <div id="activityLog" class="h-48 overflow-y-auto space-y-3">
-            <div class="text-center text-dark-400 py-8">
+            <div class="text-center text-[rgb(var(--color-text-secondary))] py-8">
                 <i data-lucide="clock" class="w-8 h-8 mx-auto mb-2"></i>
                 <p>Waiting for activity...</p>
             </div>
@@ -143,46 +151,46 @@
 </div>
 
 <!-- Send Message Modal -->
-<div id="sendMessageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6 w-full max-w-md mx-4">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-white">Send Message</h3>
-            <button onclick="closeSendMessageModal()" class="text-dark-400 hover:text-white transition-colors">
+<div id="sendMessageModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="card w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-[rgb(var(--color-text-primary))]">Send Message</h3>
+            <button onclick="closeSendMessageModal()" class="text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
         <form id="sendMessageForm" class="space-y-4">
             <div>
-                <label for="messageRecipient" class="block text-sm font-medium text-dark-300 mb-2">
+                <label for="messageRecipient" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">
                     Recipient (Phone Number)
                 </label>
                 <input 
                     type="text" 
                     id="messageRecipient" 
-                    class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors" 
+                    class="input-field" 
                     placeholder="628123456789" 
                     required
                 >
-                <p class="text-xs text-dark-400 mt-1">Enter phone number with country code (without +)</p>
+                <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Enter phone number with country code (without +)</p>
             </div>
             <div>
-                <label for="messageContent" class="block text-sm font-medium text-dark-300 mb-2">
+                <label for="messageContent" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">
                     Message
                 </label>
                 <textarea 
                     id="messageContent" 
                     rows="4" 
-                    class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors resize-none" 
+                    class="input-field resize-none" 
                     placeholder="Enter your message here..." 
                     required
                 ></textarea>
             </div>
         </form>
         <div class="flex justify-end space-x-3 mt-6">
-            <button onclick="closeSendMessageModal()" class="px-4 py-2 text-dark-300 hover:text-white transition-colors">
+            <button onclick="closeSendMessageModal()" class="px-4 py-2 text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] transition-colors">
                 Cancel
             </button>
-            <button onclick="sendMessage()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+            <button onclick="sendMessage()" class="btn-primary">
                 <i data-lucide="send" class="w-4 h-4"></i>
                 <span>Send Message</span>
             </button>
@@ -191,142 +199,104 @@
 </div>
 
 <!-- QR Code Modal -->
-<div id="qrCodeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6 w-full max-w-md mx-4">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-white">WhatsApp QR Code</h3>
-            <button onclick="closeQRCodeModal()" class="text-dark-400 hover:text-white transition-colors">
+<div id="qrCodeModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="card w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-[rgb(var(--color-text-primary))]">WhatsApp QR Code</h3>
+            <button onclick="closeQRCodeModal()" class="text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
         <div id="qrCodeContainer" class="text-center">
-            <div class="inline-flex items-center justify-center space-x-2 text-dark-400">
-                <div class="animate-spin rounded-full h-6 w-6 border-2 border-blue-400 border-t-transparent"></div>
-                <span>Loading QR Code...</span>
+            <div class="flex items-center justify-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(var(--color-accent))]"></div>
             </div>
+            <p class="text-[rgb(var(--color-text-secondary))] mt-4">Loading QR Code...</p>
         </div>
     </div>
 </div>
 
-<!-- Toast Container -->
-<div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
-
 <script>
-// Dashboard specific JavaScript
-let socket;
+// Initialize Socket.IO connection
+const socket = io();
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide icons
-    lucide.createIcons();
-    
-    initializeSocket();
-    startRealTimeUpdates();
+// Socket event listeners
+socket.on('connect', () => {
+    console.log('Connected to server');
+    addActivityLog('Connected to server', 'success');
 });
 
-function initializeSocket() {
-    socket = io();
-    
-    socket.emit('join-admin', { isAdmin: true });
-    
-    socket.on('new-message', function(data) {
-        addActivityLog('New message received', 'info');
-        updateStats();
-    });
-    
-    socket.on('connection-status', function(data) {
-        updateConnectionStatus(data.isConnected);
-        addActivityLog(`Bot ${data.isConnected ? 'connected' : 'disconnected'}`, 
-                      data.isConnected ? 'success' : 'danger');
-    });
-    
-    socket.on('qr-code', function(data) {
-        displayQRCode(data.qr);
-    });
-}
+socket.on('bot-status', (data) => {
+    if (data.status === 'ready') {
+        addActivityLog('Bot is ready', 'success');
+    } else if (data.status === 'qr') {
+        addActivityLog('QR Code generated', 'info');
+    }
+});
 
+socket.on('message-received', (data) => {
+    addActivityLog(`Message from ${data.from}`, 'info');
+    
+    // Update total messages count
+    const totalMessages = document.getElementById('totalMessages');
+    if (totalMessages) {
+        totalMessages.textContent = parseInt(totalMessages.textContent) + 1;
+    }
+});
+
+// Activity Log Function
 function addActivityLog(message, type = 'info') {
     const activityLog = document.getElementById('activityLog');
     const timestamp = new Date().toLocaleTimeString();
     
-    // Clear "waiting" message if it exists
-    const waitingMessage = activityLog.querySelector('.text-center');
-    if (waitingMessage) {
-        waitingMessage.remove();
-    }
-    
     const colorClasses = {
-        'info': 'text-blue-400',
-        'success': 'text-green-400', 
-        'danger': 'text-red-400',
-        'warning': 'text-yellow-400'
+        'success': 'text-green-500',
+        'error': 'text-red-500',
+        'warning': 'text-yellow-500',
+        'info': 'text-blue-500'
     };
     
+    const iconMap = {
+        'success': 'check-circle',
+        'error': 'alert-circle',
+        'warning': 'alert-triangle',
+        'info': 'info'
+    };
+    
+    // Remove placeholder if it exists
+    const placeholder = activityLog.querySelector('.text-center');
+    if (placeholder) {
+        activityLog.innerHTML = '';
+    }
+    
     const logEntry = document.createElement('div');
-    logEntry.className = 'flex items-start space-x-3';
+    logEntry.className = 'flex items-start space-x-3 p-3 bg-[rgb(var(--color-bg-primary))] rounded-lg border border-[rgb(var(--color-border))] animate-fade-in';
     logEntry.innerHTML = `
-        <div class="w-2 h-2 ${colorClasses[type]} rounded-full mt-2"></div>
+        <i data-lucide="${iconMap[type]}" class="w-4 h-4 ${colorClasses[type]} flex-shrink-0 mt-0.5"></i>
         <div class="flex-1 min-w-0">
-            <div class="flex items-center space-x-2">
-                <span class="text-xs text-dark-400">${timestamp}</span>
-            </div>
-            <p class="text-sm text-dark-300 mt-1">${message}</p>
+            <p class="text-sm text-[rgb(var(--color-text-primary))]">${message}</p>
+            <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">${timestamp}</p>
         </div>
     `;
     
     activityLog.insertBefore(logEntry, activityLog.firstChild);
+    lucide.createIcons();
     
-    // Keep only last 20 entries
-    while (activityLog.children.length > 20) {
+    // Keep only last 10 logs
+    while (activityLog.children.length > 10) {
         activityLog.removeChild(activityLog.lastChild);
     }
 }
 
-function updateConnectionStatus(isConnected) {
-    const statusDot = document.querySelector('.animate-pulse');
-    const statusText = statusDot.nextElementSibling;
-    
-    statusDot.className = `w-2 h-2 bg-${isConnected ? 'green' : 'red'}-400 rounded-full ${isConnected ? 'animate-pulse' : ''}`;
-    statusText.textContent = isConnected ? 'Connected' : 'Disconnected';
-}
-
-async function updateStats() {
-    try {
-        const response = await fetch('/api/stats');
-        const data = await response.json();
-        
-        if (data.success) {
-            document.getElementById('totalMessages').textContent = data.data.messages?.total || 0;
-            document.getElementById('activeUsers').textContent = data.data.users?.active || 0;
-            document.getElementById('uptime').textContent = Math.floor(data.data.uptime / 3600) + 'h';
-            document.getElementById('memoryUsage').textContent = 
-                Math.round(data.data.memoryUsage.heapUsed / 1024 / 1024) + 'MB';
-        }
-    } catch (error) {
-        console.error('Failed to update stats:', error);
-    }
-}
-
-function startRealTimeUpdates() {
-    // Update stats every 30 seconds
-    setInterval(updateStats, 30000);
-    
-    // Update uptime every minute
-    setInterval(() => {
-        const currentUptime = parseInt(document.getElementById('uptime').textContent);
-        document.getElementById('uptime').textContent = (currentUptime + 1) + 'h';
-    }, 60000);
-}
-
+// Bot Actions
 async function restartBot() {
-    if (!confirm('Are you sure you want to restart the bot?')) return;
-    
     try {
-        const response = await fetch('/api/restart', { method: 'POST' });
+        const response = await fetch('/bot/action/restart', { method: 'POST' });
         const data = await response.json();
         
         if (data.success) {
-            addActivityLog('Bot restart initiated', 'warning');
-            showToast('Bot restart initiated successfully', 'success');
+            addActivityLog('Bot restarting...', 'warning');
+            showToast('Bot is restarting', 'success');
         } else {
             showToast('Failed to restart bot: ' + data.error, 'error');
         }
@@ -339,8 +309,6 @@ function showSendMessageModal() {
     const modal = document.getElementById('sendMessageModal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
-    // Re-initialize icons in modal
     lucide.createIcons();
 }
 
@@ -401,8 +369,6 @@ async function showQRCode() {
     const modal = document.getElementById('qrCodeModal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    
-    // Re-initialize icons in modal
     lucide.createIcons();
     
     try {
@@ -413,7 +379,7 @@ async function showQRCode() {
             displayQRCode(data.data.qr);
         } else {
             document.getElementById('qrCodeContainer').innerHTML = `
-                <div class="text-center text-dark-400 py-8">
+                <div class="text-center text-[rgb(var(--color-text-secondary))] py-8">
                     <i data-lucide="alert-circle" class="w-12 h-12 mx-auto mb-4"></i>
                     <p class="text-lg mb-2">QR Code not available</p>
                     <p class="text-sm">Bot may already be connected</p>
@@ -423,7 +389,7 @@ async function showQRCode() {
         }
     } catch (error) {
         document.getElementById('qrCodeContainer').innerHTML = `
-            <div class="text-center text-red-400 py-8">
+            <div class="text-center text-red-500 py-8">
                 <i data-lucide="x-circle" class="w-12 h-12 mx-auto mb-4"></i>
                 <p class="text-lg mb-2">Failed to load QR Code</p>
                 <p class="text-sm">Please try again later</p>
@@ -442,10 +408,10 @@ function closeQRCodeModal() {
 function displayQRCode(qrData) {
     document.getElementById('qrCodeContainer').innerHTML = `
         <div class="text-center">
-            <div class="bg-white p-4 rounded-lg inline-block mb-4">
+            <div class="bg-white p-4 rounded-xl inline-block mb-4">
                 <img src="data:image/png;base64,${qrData}" alt="QR Code" class="max-w-xs w-full h-auto">
             </div>
-            <p class="text-dark-300">Scan this QR code with WhatsApp</p>
+            <p class="text-[rgb(var(--color-text-secondary))]">Scan this QR code with WhatsApp</p>
         </div>
     `;
 }
@@ -458,10 +424,10 @@ function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toastContainer');
     
     const colorClasses = {
-        'success': 'bg-green-600 border-green-500',
-        'error': 'bg-red-600 border-red-500', 
-        'warning': 'bg-yellow-600 border-yellow-500',
-        'info': 'bg-blue-600 border-blue-500'
+        'success': 'bg-green-500 border-green-400',
+        'error': 'bg-red-500 border-red-400', 
+        'warning': 'bg-yellow-500 border-yellow-400',
+        'info': 'bg-blue-500 border-blue-400'
     };
     
     const iconMap = {
@@ -473,7 +439,7 @@ function showToast(message, type = 'info') {
     
     const toastId = 'toast-' + Date.now();
     const toastHtml = `
-        <div id="${toastId}" class="flex items-center space-x-3 ${colorClasses[type]} text-white px-4 py-3 rounded-lg shadow-lg border transform translate-x-full transition-transform duration-300">
+        <div id="${toastId}" class="flex items-center space-x-3 ${colorClasses[type]} text-white px-4 py-3 rounded-xl shadow-lg border transform translate-x-full transition-transform duration-300">
             <i data-lucide="${iconMap[type]}" class="w-5 h-5 flex-shrink-0"></i>
             <span class="flex-1">${message}</span>
             <button onclick="closeToast('${toastId}')" class="text-white hover:text-gray-200 transition-colors">
@@ -483,8 +449,6 @@ function showToast(message, type = 'info') {
     `;
     
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
-    // Initialize icons and animate in
     lucide.createIcons();
     
     const toastElement = document.getElementById(toastId);
@@ -492,7 +456,6 @@ function showToast(message, type = 'info') {
         toastElement.classList.remove('translate-x-full');
     }, 100);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
         closeToast(toastId);
     }, 5000);
@@ -522,11 +485,11 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Handle escape key to close modals
+// Handle escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeSendMessageModal();
         closeQRCodeModal();
     }
 });
-</script> 
+</script>

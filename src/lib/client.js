@@ -5,18 +5,19 @@ import path from "path";
 import util from "util";
 import chalk from "chalk";
 import Crypto from "crypto";
-import baileys from "@whiskeysockets/baileys";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { fileTypeFromBuffer } from "file-type";
 import { fileURLToPath } from "url";
+import { writeExif } from './exif.js'
 
-const {
+import baileys, {
   generateWAMessage,
   generateWAMessageFromContent,
+  downloadContentFromMessage,
   proto,
   prepareWAMessageMedia,
   WA_DEFAULT_EPHEMERAL,
-} = baileys;
+} from "@whiskeysockets/baileys";
 
 import { isNumber, getRandom, areJidsSameUser, jidNormalizedUser, jidDecode, extractMessageContent } from "./helper.js";
 
@@ -183,6 +184,7 @@ export function Client({ client: conn, store }) {
           ptvMessage: "video",
         }[message.type];
 
+        
         if ("thumbnailDirectPath" in message.msg && !("url" in message.msg)) {
           message = {
             directPath: message.msg.thumbnailDirectPath,
@@ -192,8 +194,33 @@ export function Client({ client: conn, store }) {
         } else {
           message = message.msg;
         }
-        return await baileys.toBuffer(
-          await baileys.downloadContentFromMessage(message, mime),
+        
+        // Normalize any stream-like (AsyncIterable, Node Readable, or Web ReadableStream) to Buffer
+                    const toBuffer = async (s) => {
+                        // Web ReadableStream (WHATWG)
+                        if (s && typeof s.getReader === 'function') {
+                            const reader = s.getReader();
+                            const chunks = [];
+                            for (; ;) {
+                                const { value, done } = await reader.read();
+                                if (done) break;
+                                if (value) chunks.push(Buffer.from(value));
+                            }
+                            return Buffer.concat(chunks);
+                        }
+                        // Async iterable (Node Readable or async generator)
+                        if (s && typeof s[Symbol.asyncIterator] === 'function') {
+                            const chunks = [];
+                            for await (const chunk of s) {
+                                chunks.push(Buffer.from(chunk));
+                            }
+                            return Buffer.concat(chunks);
+                        }
+                        throw new Error('Unsupported stream type from downloadContentFromMessage');
+                    };
+                    
+        return await toBuffer(
+          await downloadContentFromMessage(message, mime),
         );
       },
       enumerable: true,
@@ -231,7 +258,15 @@ export function Client({ client: conn, store }) {
               : `${conn.user?.name} (${new Date()}).${ext}`,
             ...options,
           };
-        else if (/image/.test(mime))
+        else if (options.asSticker || /webp/.test(mime)) {
+          let pathFile = await writeExif({ mimetype, data: buffer }, { ...options })
+          data = {
+            sticker: fs.readFileSync(pathFile),
+            mimetype: 'image/webp',
+            ...options,
+          }
+          fs.existsSync(pathFile) ? await fs.promises.unlink(pathFile) : ''  
+        } else if (/image/.test(mime))
           data = {
             image: buffer,
             mimetype: options?.mimetype ? options.mimetype : "image/png",

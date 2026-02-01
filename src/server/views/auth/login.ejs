@@ -1,61 +1,68 @@
-<div class="bg-dark-800 border border-dark-700 rounded-xl shadow-2xl p-8">
+<!-- Login Card -->
+<div class="card glass-card">
     <!-- Logo and Title -->
     <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
-            <i data-lucide="bot" class="w-8 h-8 text-white"></i>
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[rgb(var(--color-accent))] rounded-2xl mb-4 shadow-lg">
+            <i data-lucide="bot" class="w-8 h-8 text-black dark:text-white"></i>
         </div>
-        <h2 class="text-2xl font-bold text-white mb-2">AkaneBot</h2>
-        <p class="text-dark-400">Admin Dashboard</p>
+        <h2 class="text-3xl font-bold text-[rgb(var(--color-text-primary))] mb-2">Welcome Back</h2>
+        <p class="text-[rgb(var(--color-text-secondary))]">Sign in to your dashboard</p>
     </div>
 
     <!-- Error Alert -->
     <% if (typeof error !== 'undefined' && error) { %>
-        <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg mb-6">
+        <div class="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl mb-6">
             <div class="flex items-center space-x-2">
-                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
-                <span><%= error %></span>
+                <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                <span class="text-sm"><%= error %></span>
             </div>
         </div>
     <% } %>
 
     <!-- Login Form -->
-    <form action="/auth/login" method="POST" class="space-y-6">
+    <form action="/auth/login" method="POST" class="space-y-5">
         <!-- Username Field -->
-        <div>
-            <label for="username" class="block text-sm font-medium text-dark-300 mb-2">Username</label>
+        <div class="space-y-2">
+            <label for="username" class="block text-sm font-medium text-[rgb(var(--color-text-primary))]">
+                Username
+            </label>
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i data-lucide="user" class="w-5 h-5 text-dark-500"></i>
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i data-lucide="user" class="w-5 h-5 text-[rgb(var(--color-text-secondary))]"></i>
                 </div>
                 <input 
                     type="text" 
-                    class="bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full pl-10 pr-3 py-3 rounded-lg transition-colors" 
+                    class="input-field pl-11" 
                     id="username" 
                     name="username" 
                     placeholder="Enter your username"
                     required
+                    autocomplete="username"
                 >
             </div>
         </div>
 
         <!-- Password Field -->
-        <div>
-            <label for="password" class="block text-sm font-medium text-dark-300 mb-2">Password</label>
+        <div class="space-y-2">
+            <label for="password" class="block text-sm font-medium text-[rgb(var(--color-text-primary))]">
+                Password
+            </label>
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i data-lucide="lock" class="w-5 h-5 text-dark-500"></i>
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i data-lucide="lock" class="w-5 h-5 text-[rgb(var(--color-text-secondary))]"></i>
                 </div>
                 <input 
                     type="password" 
-                    class="bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full pl-10 pr-12 py-3 rounded-lg transition-colors" 
+                    class="input-field pl-11 pr-11" 
                     id="password" 
                     name="password" 
                     placeholder="Enter your password"
                     required
+                    autocomplete="current-password"
                 >
                 <button 
                     type="button" 
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-500 hover:text-dark-300 transition-colors" 
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] transition-colors" 
                     id="togglePassword"
                 >
                     <i data-lucide="eye" class="w-5 h-5"></i>
@@ -63,47 +70,126 @@
             </div>
         </div>
 
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center space-x-2 cursor-pointer group">
+                <input 
+                    type="checkbox" 
+                    name="remember" 
+                    class="w-4 h-4 rounded border-[rgb(var(--color-border))] bg-[rgb(var(--color-bg-primary))] text-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent))]/20 cursor-pointer"
+                >
+                <span class="text-[rgb(var(--color-text-secondary))] group-hover:text-[rgb(var(--color-text-primary))] transition-colors">Remember me</span>
+            </label>
+            <a href="#" class="text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-accent))] transition-colors">
+                Forgot password?
+            </a>
+        </div>
+
         <!-- Login Button -->
         <button 
             type="submit" 
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-dark-800"
+            class="btn-primary w-full"
         >
             <div class="flex items-center justify-center space-x-2">
                 <i data-lucide="log-in" class="w-5 h-5"></i>
-                <span>Login</span>
+                <span>Sign In</span>
             </div>
         </button>
     </form>
 
-    <!-- Footer -->
-    <div class="text-center mt-8">
-        <div class="flex items-center justify-center space-x-2 text-dark-500">
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
-            <span class="text-sm">Secure Admin Access</span>
+    <!-- Divider -->
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-[rgb(var(--color-border))]"></div>
         </div>
+        <div class="relative flex justify-center text-sm">
+            <span class="px-4 bg-[rgb(var(--color-bg-secondary))] text-[rgb(var(--color-text-secondary))]">
+                Or continue with
+            </span>
+        </div>
+    </div>
+
+    <!-- Social Login Buttons -->
+    <div class="grid grid-cols-2 gap-3">
+        <button class="flex items-center justify-center space-x-2 px-4 py-3 bg-[rgb(var(--color-bg-primary))] border border-[rgb(var(--color-border))] rounded-xl hover:border-[rgb(var(--color-accent))] transition-all duration-300 group">
+            <i data-lucide="github" class="w-5 h-5 text-[rgb(var(--color-text-secondary))] group-hover:text-[rgb(var(--color-text-primary))]"></i>
+            <span class="text-sm font-medium text-[rgb(var(--color-text-secondary))] group-hover:text-[rgb(var(--color-text-primary))]">Github</span>
+        </button>
+        <button class="flex items-center justify-center space-x-2 px-4 py-3 bg-[rgb(var(--color-bg-primary))] border border-[rgb(var(--color-border))] rounded-xl hover:border-[rgb(var(--color-accent))] transition-all duration-300 group">
+            <i data-lucide="mail" class="w-5 h-5 text-[rgb(var(--color-text-secondary))] group-hover:text-[rgb(var(--color-text-primary))]"></i>
+            <span class="text-sm font-medium text-[rgb(var(--color-text-secondary))] group-hover:text-[rgb(var(--color-text-primary))]">Google</span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center">
+        <div class="flex items-center justify-center space-x-2 text-[rgb(var(--color-text-secondary))] text-sm">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Secure Admin Access</span>
+        </div>
+        <p class="mt-4 text-sm text-[rgb(var(--color-text-secondary))]">
+            Don't have an account? 
+            <a href="#" class="text-[rgb(var(--color-accent))] hover:underline font-medium">
+                Contact Admin
+            </a>
+        </p>
     </div>
 </div>
 
+<!-- Copyright -->
+<div class="text-center mt-6">
+    <p class="text-sm text-[rgb(var(--color-text-secondary))]">
+        © 2024 AkaneBot. All rights reserved.
+    </p>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide icons
-    lucide.createIcons();
-    
-    // Toggle password visibility
-    document.getElementById('togglePassword').addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
-        const icon = this.querySelector('i');
         
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.setAttribute('data-lucide', 'eye-off');
-        } else {
-            passwordInput.type = 'password';
-            icon.setAttribute('data-lucide', 'eye');
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.setAttribute('data-lucide', 'eye-off');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.setAttribute('data-lucide', 'eye');
+                }
+                
+                // Re-create icons to update the changed icon
+                lucide.createIcons();
+            });
         }
-        
-        // Re-create icons to update the changed icon
-        lucide.createIcons();
+
+        // Auto-focus username field
+        const usernameField = document.getElementById('username');
+        if (usernameField) {
+            usernameField.focus();
+        }
+
+        // Form validation feedback
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const btnContent = submitBtn.innerHTML;
+                
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Signing in...</span>
+                    </div>
+                `;
+            });
+        }
     });
-});
 </script>

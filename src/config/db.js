@@ -65,6 +65,21 @@ const getDefaultSettings = () => ({
 });
 
 export function syncDatabase(m, client) {
+  // Initialize database structure if it doesn't exist
+  if (!db.data) {
+    db.data = {};
+  }
+  if (!validators.isObject(db.data.users)) {
+    db.data.users = {};
+  }
+  if (!validators.isObject(db.data.groups)) {
+    db.data.groups = {};
+  }
+  if (!validators.isObject(db.data.settings)) {
+    db.data.settings = {};
+  }
+
+  // Sync user data
   let user = db.data.users[m.sender];
   if (!validators.isObject(user)) {
     db.data.users[m.sender] = getDefaultUser(m);
@@ -77,6 +92,7 @@ export function syncDatabase(m, client) {
     }
   }
 
+  // Sync group data
   if (m.isGroup) {
     let group = db.data.groups[m.chat];
     if (!validators.isObject(group)) {
@@ -91,6 +107,7 @@ export function syncDatabase(m, client) {
     }
   }
 
+  // Sync settings data
   const botId = client.user?.jid || client.user?.id;
   if (!botId) return;
 

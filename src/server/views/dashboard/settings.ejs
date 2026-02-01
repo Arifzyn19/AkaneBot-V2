@@ -1,34 +1,34 @@
 <!-- Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
-    <h1 class="text-3xl font-bold text-white">Bot Settings</h1>
-    <button onclick="saveAllSettings()" class="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors">
+    <h1 class="section-title !mb-0">Bot Settings</h1>
+    <button onclick="saveAllSettings()" class="btn-primary">
         <i data-lucide="check-circle" class="w-4 h-4"></i>
         <span>Save All Changes</span>
     </button>
 </div>
 
 <!-- Settings Tabs -->
-<div class="bg-dark-800 rounded-xl border border-dark-700 overflow-hidden">
+<div class="card !p-0 overflow-hidden">
     <!-- Tab Headers -->
-    <div class="border-b border-dark-700">
-        <nav class="flex space-x-8 px-6" aria-label="Tabs">
-            <button onclick="switchTab('general')" id="tab-general" class="tab-button active flex items-center space-x-2 py-4 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-400">
+    <div class="border-b border-[rgb(var(--color-border))]">
+        <nav class="flex space-x-8 px-6 overflow-x-auto" aria-label="Tabs">
+            <button onclick="switchTab('general')" id="tab-general" class="tab-button active whitespace-nowrap">
                 <i data-lucide="settings" class="w-4 h-4"></i>
                 <span>General</span>
             </button>
-            <button onclick="switchTab('connection')" id="tab-connection" class="tab-button flex items-center space-x-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-dark-300 hover:text-white hover:border-dark-400">
+            <button onclick="switchTab('connection')" id="tab-connection" class="tab-button whitespace-nowrap">
                 <i data-lucide="wifi" class="w-4 h-4"></i>
                 <span>Connection</span>
             </button>
-            <button onclick="switchTab('commands')" id="tab-commands" class="tab-button flex items-center space-x-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-dark-300 hover:text-white hover:border-dark-400">
+            <button onclick="switchTab('commands')" id="tab-commands" class="tab-button whitespace-nowrap">
                 <i data-lucide="terminal" class="w-4 h-4"></i>
                 <span>Commands</span>
             </button>
-            <button onclick="switchTab('security')" id="tab-security" class="tab-button flex items-center space-x-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-dark-300 hover:text-white hover:border-dark-400">
+            <button onclick="switchTab('security')" id="tab-security" class="tab-button whitespace-nowrap">
                 <i data-lucide="shield-check" class="w-4 h-4"></i>
                 <span>Security</span>
             </button>
-            <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button flex items-center space-x-2 py-4 px-1 border-b-2 border-transparent font-medium text-sm text-dark-300 hover:text-white hover:border-dark-400">
+            <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button whitespace-nowrap">
                 <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                 <span>Advanced</span>
             </button>
@@ -42,46 +42,46 @@
             <form id="generalForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="botName" class="block text-sm font-medium text-dark-300 mb-2">Bot Name</label>
+                        <label for="botName" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Bot Name</label>
                         <input type="text" id="botName" value="<%= config.BOT_NAME || 'AkaneBot' %>"
-                               class="w-full bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                        <p class="text-xs text-dark-400 mt-1">The display name for your bot</p>
+                               class="input-field">
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">The display name for your bot</p>
                     </div>
                     
                     <div>
-                        <label for="prefix" class="block text-sm font-medium text-dark-300 mb-2">Command Prefix</label>
+                        <label for="prefix" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Command Prefix</label>
                         <input type="text" id="prefix" value="<%= config.PREFIX || '!' %>" maxlength="3"
-                               class="w-full bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                        <p class="text-xs text-dark-400 mt-1">Character(s) that trigger commands</p>
+                               class="input-field">
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Character(s) that trigger commands</p>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="logLevel" class="block text-sm font-medium text-dark-300 mb-2">Log Level</label>
-                        <select id="logLevel" class="w-full bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
+                        <label for="logLevel" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Log Level</label>
+                        <select id="logLevel" class="input-field">
                             <option value="error" <%= config.LOG_LEVEL === 'error' ? 'selected' : '' %>>Error</option>
                             <option value="warn" <%= config.LOG_LEVEL === 'warn' ? 'selected' : '' %>>Warning</option>
                             <option value="info" <%= config.LOG_LEVEL === 'info' ? 'selected' : '' %>>Info</option>
                             <option value="debug" <%= config.LOG_LEVEL === 'debug' ? 'selected' : '' %>>Debug</option>
                         </select>
-                        <p class="text-xs text-dark-400 mt-1">Level of detail in console logs</p>
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Level of detail in console logs</p>
                     </div>
                     
                     <div>
-                        <label for="commandsDir" class="block text-sm font-medium text-dark-300 mb-2">Commands Directory</label>
+                        <label for="commandsDir" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Commands Directory</label>
                         <input type="text" id="commandsDir" value="<%= config.COMMANDS_DIR || 'src/commands' %>"
-                               class="w-full bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                        <p class="text-xs text-dark-400 mt-1">Directory containing bot commands</p>
+                               class="input-field">
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Directory containing bot commands</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center space-x-3">
                     <input type="checkbox" id="autoReconnect" <%= config.AUTO_RECONNECT === 'true' ? 'checked' : '' %>
-                           class="w-4 h-4 text-blue-600 bg-dark-900 border-dark-600 rounded focus:ring-blue-500 focus:ring-2">
+                           class="w-4 h-4 text-blue-500 bg-[rgb(var(--color-bg-primary))] border-[rgb(var(--color-border))] rounded focus:ring-blue-500 focus:ring-2">
                     <div>
-                        <label for="autoReconnect" class="text-sm font-medium text-white">Auto Reconnect</label>
-                        <p class="text-xs text-dark-400">Automatically reconnect when connection is lost</p>
+                        <label for="autoReconnect" class="text-sm font-medium text-[rgb(var(--color-text-primary))]">Auto Reconnect</label>
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))]">Automatically reconnect when connection is lost</p>
                     </div>
                 </div>
             </form>
@@ -93,37 +93,37 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex items-center space-x-3">
                         <input type="checkbox" id="printQR" <%= config.PRINT_QR === 'true' ? 'checked' : '' %>
-                               class="w-4 h-4 text-blue-600 bg-dark-900 border-dark-600 rounded focus:ring-blue-500 focus:ring-2">
+                               class="w-4 h-4 text-blue-500 bg-[rgb(var(--color-bg-primary))] border-[rgb(var(--color-border))] rounded focus:ring-blue-500 focus:ring-2">
                         <div>
-                            <label for="printQR" class="text-sm font-medium text-white">Print QR Code to Console</label>
-                            <p class="text-xs text-dark-400">Display QR code in terminal for scanning</p>
+                            <label for="printQR" class="text-sm font-medium text-[rgb(var(--color-text-primary))]">Print QR Code to Console</label>
+                            <p class="text-xs text-[rgb(var(--color-text-secondary))]">Display QR code in terminal for scanning</p>
                         </div>
                     </div>
                     
                     <div class="flex items-center space-x-3">
                         <input type="checkbox" id="usePairingCode" <%= config.USE_PAIRING_CODE === 'true' ? 'checked' : '' %>
-                               class="w-4 h-4 text-blue-600 bg-dark-900 border-dark-600 rounded focus:ring-blue-500 focus:ring-2">
+                               class="w-4 h-4 text-blue-500 bg-[rgb(var(--color-bg-primary))] border-[rgb(var(--color-border))] rounded focus:ring-blue-500 focus:ring-2">
                         <div>
-                            <label for="usePairingCode" class="text-sm font-medium text-white">Use Pairing Code</label>
-                            <p class="text-xs text-dark-400">Use pairing code instead of QR code</p>
+                            <label for="usePairingCode" class="text-sm font-medium text-[rgb(var(--color-text-primary))]">Use Pairing Code</label>
+                            <p class="text-xs text-[rgb(var(--color-text-secondary))]">Use pairing code instead of QR code</p>
                         </div>
                     </div>
                 </div>
                 
                 <div id="pairingNumberField" style="display: <%= config.USE_PAIRING_CODE === 'true' ? 'block' : 'none' %>;">
-                    <label for="pairingNumber" class="block text-sm font-medium text-dark-300 mb-2">Pairing Phone Number</label>
+                    <label for="pairingNumber" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Pairing Phone Number</label>
                     <input type="text" id="pairingNumber" value="<%= config.PAIRING_NUMBER || '' %>" 
                            placeholder="628123456789"
-                           class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                    <p class="text-xs text-dark-400 mt-1">Phone number for pairing code (without +)</p>
+                           class="input-field">
+                    <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Phone number for pairing code (without +)</p>
                 </div>
                 
-                <div class="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
                     <div class="flex items-center space-x-2">
                         <i data-lucide="info" class="w-5 h-5 text-blue-400"></i>
                         <div>
                             <p class="font-medium text-blue-300">Connection Status:</p>
-                            <div id="connectionStatus" class="text-sm text-dark-300">
+                            <div id="connectionStatus" class="text-sm text-[rgb(var(--color-text-secondary))]">
                                 <div class="inline-flex items-center space-x-2">
                                     <div class="animate-spin rounded-full h-4 w-4 border-2 border-blue-400 border-t-transparent"></div>
                                     <span>Checking...</span>
@@ -139,56 +139,46 @@
         <div id="content-commands" class="tab-content hidden">
             <div class="space-y-6">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-semibold text-white">Command Categories</h3>
-                    <button onclick="reloadCommands()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <h3 class="text-lg font-semibold text-[rgb(var(--color-text-primary))]">Command Categories</h3>
+                    <button onclick="reloadCommands()" class="btn-secondary">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                         <span>Reload Commands</span>
                     </button>
                 </div>
                 
                 <div id="commandCategories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-dark-700 border border-green-600 rounded-lg p-4">
+                    <div class="bg-[rgb(var(--color-bg-primary))] border border-green-500 rounded-xl p-4">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <h4 class="text-white font-medium">General Commands</h4>
-                                <p class="text-dark-400 text-sm">Basic bot commands like ping, menu, help</p>
+                                <h4 class="text-[rgb(var(--color-text-primary))] font-medium">General Commands</h4>
+                                <p class="text-[rgb(var(--color-text-secondary))] text-sm">Basic bot commands</p>
                             </div>
-                            <input type="checkbox" id="generalCommands" checked
-                                   class="w-4 h-4 text-green-600 bg-dark-900 border-dark-600 rounded focus:ring-green-500 focus:ring-2">
+                            <span class="px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded">Active</span>
                         </div>
-                        <p class="text-green-400 text-sm font-medium">5 commands loaded</p>
+                        <div class="text-xs text-[rgb(var(--color-text-secondary))]">5 commands loaded</div>
                     </div>
                     
-                    <div class="bg-dark-700 border border-blue-600 rounded-lg p-4">
+                    <div class="bg-[rgb(var(--color-bg-primary))] border border-green-500 rounded-xl p-4">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <h4 class="text-white font-medium">Media Commands</h4>
-                                <p class="text-dark-400 text-sm">Image, video, and file processing</p>
+                                <h4 class="text-[rgb(var(--color-text-primary))] font-medium">Media Commands</h4>
+                                <p class="text-[rgb(var(--color-text-secondary))] text-sm">Image and video tools</p>
                             </div>
-                            <input type="checkbox" id="mediaCommands" checked
-                                   class="w-4 h-4 text-blue-600 bg-dark-900 border-dark-600 rounded focus:ring-blue-500 focus:ring-2">
+                            <span class="px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded">Active</span>
                         </div>
-                        <p class="text-blue-400 text-sm font-medium">4 commands loaded</p>
+                        <div class="text-xs text-[rgb(var(--color-text-secondary))]">4 commands loaded</div>
                     </div>
                     
-                    <div class="bg-dark-700 border border-yellow-600 rounded-lg p-4">
+                    <div class="bg-[rgb(var(--color-bg-primary))] border border-green-500 rounded-xl p-4">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <h4 class="text-white font-medium">Utility Commands</h4>
-                                <p class="text-dark-400 text-sm">Weather, calculator, translator, etc.</p>
+                                <h4 class="text-[rgb(var(--color-text-primary))] font-medium">Utility Commands</h4>
+                                <p class="text-[rgb(var(--color-text-secondary))] text-sm">Helpful utilities</p>
                             </div>
-                            <input type="checkbox" id="utilityCommands" checked
-                                   class="w-4 h-4 text-yellow-600 bg-dark-900 border-dark-600 rounded focus:ring-yellow-500 focus:ring-2">
+                            <span class="px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded">Active</span>
                         </div>
-                        <p class="text-yellow-400 text-sm font-medium">6 commands loaded</p>
+                        <div class="text-xs text-[rgb(var(--color-text-secondary))]">6 commands loaded</div>
                     </div>
-                </div>
-                
-                <div>
-                    <label for="commandCooldown" class="block text-sm font-medium text-dark-300 mb-2">Command Cooldown (seconds)</label>
-                    <input type="number" id="commandCooldown" value="3" min="0" max="60"
-                           class="w-full md:w-64 bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                    <p class="text-xs text-dark-400 mt-1">Minimum time between commands per user</p>
                 </div>
             </div>
         </div>
@@ -197,43 +187,29 @@
         <div id="content-security" class="tab-content hidden">
             <form id="securityForm" class="space-y-6">
                 <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">Owner Numbers</h3>
-                    <div>
-                        <label for="ownerNumbers" class="block text-sm font-medium text-dark-300 mb-2">Owner Phone Numbers</label>
-                        <textarea id="ownerNumbers" rows="3" 
-                                  placeholder="628123456789&#10;628987654321"
-                                  class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors resize-none"><%= config.OWNER_NUMBERS || config.OWNER_NUMBER || '' %></textarea>
-                        <p class="text-xs text-dark-400 mt-1">One phone number per line (without +). Owners have full bot access.</p>
-                    </div>
+                    <label for="ownerNumbers" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Owner Numbers</label>
+                    <textarea id="ownerNumbers" rows="3" 
+                              class="input-field resize-none"
+                              placeholder="628123456789,628987654321"><%= config.OWNER_NUMBERS || '' %></textarea>
+                    <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Comma-separated list of phone numbers with full bot access</p>
                 </div>
                 
                 <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">Admin Numbers</h3>
-                    <div>
-                        <label for="adminNumbers" class="block text-sm font-medium text-dark-300 mb-2">Admin Phone Numbers</label>
-                        <textarea id="adminNumbers" rows="3" 
-                                  placeholder="628111222333&#10;628444555666"
-                                  class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors resize-none"><%= config.ADMIN_NUMBERS || '' %></textarea>
-                        <p class="text-xs text-dark-400 mt-1">One phone number per line (without +). Admins have limited bot access.</p>
-                    </div>
+                    <label for="adminNumbers" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Admin Numbers</label>
+                    <textarea id="adminNumbers" rows="3" 
+                              class="input-field resize-none"
+                              placeholder="628111111111,628222222222"><%= config.ADMIN_NUMBERS || '' %></textarea>
+                    <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Comma-separated list of phone numbers with admin privileges</p>
                 </div>
                 
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" id="restrictToOwners"
-                               class="w-4 h-4 text-red-600 bg-dark-900 border-dark-600 rounded focus:ring-red-500 focus:ring-2">
+                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                    <div class="flex items-start space-x-2">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5"></i>
                         <div>
-                            <label for="restrictToOwners" class="text-sm font-medium text-white">Restrict to Owners Only</label>
-                            <p class="text-xs text-dark-400">Only allow owners to use the bot</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" id="enableAntiSpam" checked
-                               class="w-4 h-4 text-green-600 bg-dark-900 border-dark-600 rounded focus:ring-green-500 focus:ring-2">
-                        <div>
-                            <label for="enableAntiSpam" class="text-sm font-medium text-white">Enable Anti-Spam Protection</label>
-                            <p class="text-xs text-dark-400">Automatically block users who spam commands</p>
+                            <p class="font-medium text-yellow-300 mb-1">Security Notice</p>
+                            <p class="text-sm text-[rgb(var(--color-text-secondary))]">
+                                Be careful when adding phone numbers. Owner and admin users have elevated permissions.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -243,64 +219,49 @@
         <!-- Advanced Settings -->
         <div id="content-advanced" class="tab-content hidden">
             <form id="advancedForm" class="space-y-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">Database Settings</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="dbMode" class="block text-sm font-medium text-dark-300 mb-2">Database Mode</label>
-                            <select id="dbMode" class="w-full bg-dark-900 border border-dark-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                                <option value="json" <%= config.DB_MODE === 'json' ? 'selected' : '' %>>JSON File</option>
-                                <option value="mongodb" <%= config.DB_MODE === 'mongodb' ? 'selected' : '' %>>MongoDB</option>
-                            </select>
-                            <p class="text-xs text-dark-400 mt-1">Storage method for bot data</p>
-                        </div>
-                        
-                        <div>
-                            <label for="dbPath" class="block text-sm font-medium text-dark-300 mb-2">Database Path/URI</label>
-                            <input type="text" id="dbPath" value="<%= config.DB_PATH || config.MONGO_URI || '' %>" 
-                                   placeholder="./database.json or mongodb://..."
-                                   class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                            <p class="text-xs text-dark-400 mt-1">File path for JSON or connection URI for MongoDB</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold text-white mb-4">API Keys</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="openweatherKey" class="block text-sm font-medium text-dark-300 mb-2">OpenWeather API Key</label>
-                            <input type="password" id="openweatherKey" value="<%= config.OPENWEATHER_API_KEY || '' %>" 
-                                   placeholder="Enter API key"
-                                   class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                            <p class="text-xs text-dark-400 mt-1">For weather command functionality</p>
-                        </div>
-                        
-                        <div>
-                            <label for="openaiKey" class="block text-sm font-medium text-dark-300 mb-2">OpenAI API Key</label>
-                            <input type="password" id="openaiKey" value="<%= config.OPENAI_API_KEY || '' %>" 
-                                   placeholder="Enter API key"
-                                   class="w-full bg-dark-900 border border-dark-600 text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2 rounded-lg transition-colors">
-                            <p class="text-xs text-dark-400 mt-1">For AI-powered commands</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-3">
-                    <input type="checkbox" id="enableDebugMode"
-                           class="w-4 h-4 text-yellow-600 bg-dark-900 border-dark-600 rounded focus:ring-yellow-500 focus:ring-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="enableDebugMode" class="text-sm font-medium text-white">Enable Debug Mode</label>
-                        <p class="text-xs text-dark-400">Show detailed debug information in console</p>
+                        <label for="dbMode" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Database Mode</label>
+                        <select id="dbMode" class="input-field">
+                            <option value="json" <%= config.DB_MODE === 'json' ? 'selected' : '' %>>JSON File</option>
+                            <option value="mongodb" <%= config.DB_MODE === 'mongodb' ? 'selected' : '' %>>MongoDB</option>
+                            <option value="sqlite" <%= config.DB_MODE === 'sqlite' ? 'selected' : '' %>>SQLite</option>
+                        </select>
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Storage method for bot data</p>
+                    </div>
+                    
+                    <div>
+                        <label for="dbPath" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">Database Path</label>
+                        <input type="text" id="dbPath" value="<%= config.DB_PATH || './data' %>"
+                               class="input-field">
+                        <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">Path to database file/directory</p>
                     </div>
                 </div>
                 
-                <div class="bg-yellow-900 bg-opacity-20 border border-yellow-700 rounded-lg p-4">
+                <div>
+                    <label for="openweatherKey" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">OpenWeather API Key</label>
+                    <input type="password" id="openweatherKey" value="<%= config.OPENWEATHER_API_KEY || '' %>"
+                           placeholder="Enter API key..."
+                           class="input-field">
+                    <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">For weather command functionality</p>
+                </div>
+                
+                <div>
+                    <label for="openaiKey" class="block text-sm font-medium text-[rgb(var(--color-text-primary))] mb-2">OpenAI API Key</label>
+                    <input type="password" id="openaiKey" value="<%= config.OPENAI_API_KEY || '' %>"
+                           placeholder="Enter API key..."
+                           class="input-field">
+                    <p class="text-xs text-[rgb(var(--color-text-secondary))] mt-1">For AI-powered features</p>
+                </div>
+                
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
                     <div class="flex items-start space-x-2">
-                        <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5"></i>
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
                         <div>
-                            <p class="font-medium text-yellow-300">Warning:</p>
-                            <p class="text-yellow-200 text-sm">Changing advanced settings may require a bot restart to take effect.</p>
+                            <p class="font-medium text-red-300 mb-1">Sensitive Information</p>
+                            <p class="text-sm text-[rgb(var(--color-text-secondary))]">
+                                API keys are sensitive. Never share them publicly and rotate them regularly.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -309,44 +270,39 @@
     </div>
 </div>
 
-<!-- Toast Container -->
-<div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide icons
     lucide.createIcons();
-    
-    checkConnectionStatus();
     
     // Toggle pairing number field
     document.getElementById('usePairingCode').addEventListener('change', function() {
         const pairingField = document.getElementById('pairingNumberField');
         pairingField.style.display = this.checked ? 'block' : 'none';
     });
+    
+    // Check connection status on connection tab
+    checkConnectionStatus();
 });
 
 function switchTab(tabName) {
-    // Hide all tab contents
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(content => content.classList.add('hidden'));
-    
-    // Remove active class from all tabs
-    const tabs = document.querySelectorAll('.tab-button');
-    tabs.forEach(tab => {
-        tab.classList.remove('active', 'border-blue-500', 'text-blue-400');
-        tab.classList.add('border-transparent', 'text-dark-300');
+    // Hide all content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
     });
     
-    // Show selected tab content
+    // Show selected content
     document.getElementById(`content-${tabName}`).classList.remove('hidden');
     
-    // Add active class to selected tab
-    const activeTab = document.getElementById(`tab-${tabName}`);
-    activeTab.classList.add('active', 'border-blue-500', 'text-blue-400');
-    activeTab.classList.remove('border-transparent', 'text-dark-300');
+    // Update tab buttons
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active', 'border-[rgb(var(--color-accent))]', 'text-[rgb(var(--color-accent))]');
+        btn.classList.add('border-transparent', 'text-[rgb(var(--color-text-secondary))]');
+    });
     
-    // Re-initialize icons
+    const activeTab = document.getElementById(`tab-${tabName}`);
+    activeTab.classList.add('active', 'border-[rgb(var(--color-accent))]', 'text-[rgb(var(--color-accent))]');
+    activeTab.classList.remove('border-transparent', 'text-[rgb(var(--color-text-secondary))]');
+    
     lucide.createIcons();
 }
 
@@ -380,7 +336,6 @@ async function checkConnectionStatus() {
         `;
     }
     
-    // Re-initialize icons
     lucide.createIcons();
 }
 
@@ -447,10 +402,10 @@ function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toastContainer');
     
     const colorClasses = {
-        'success': 'bg-green-600 border-green-500',
-        'error': 'bg-red-600 border-red-500', 
-        'warning': 'bg-yellow-600 border-yellow-500',
-        'info': 'bg-blue-600 border-blue-500'
+        'success': 'bg-green-500 border-green-400',
+        'error': 'bg-red-500 border-red-400', 
+        'warning': 'bg-yellow-500 border-yellow-400',
+        'info': 'bg-blue-500 border-blue-400'
     };
     
     const iconMap = {
@@ -462,7 +417,7 @@ function showToast(message, type = 'info') {
     
     const toastId = 'toast-' + Date.now();
     const toastHtml = `
-        <div id="${toastId}" class="flex items-center space-x-3 ${colorClasses[type]} text-white px-4 py-3 rounded-lg shadow-lg border transform translate-x-full transition-transform duration-300">
+        <div id="${toastId}" class="flex items-center space-x-3 ${colorClasses[type]} text-white px-4 py-3 rounded-xl shadow-lg border transform translate-x-full transition-transform duration-300">
             <i data-lucide="${iconMap[type]}" class="w-5 h-5 flex-shrink-0"></i>
             <span class="flex-1">${message}</span>
             <button onclick="closeToast('${toastId}')" class="text-white hover:text-gray-200 transition-colors">
@@ -472,8 +427,6 @@ function showToast(message, type = 'info') {
     `;
     
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
-    // Initialize icons and animate in
     lucide.createIcons();
     
     const toastElement = document.getElementById(toastId);
@@ -481,7 +434,6 @@ function showToast(message, type = 'info') {
         toastElement.classList.remove('translate-x-full');
     }, 100);
     
-    // Auto remove after 8 seconds for longer messages
     setTimeout(() => {
         closeToast(toastId);
     }, 8000);

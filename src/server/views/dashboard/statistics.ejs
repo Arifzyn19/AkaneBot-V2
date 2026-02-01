@@ -22,11 +22,11 @@
             <div>
                 <p class="text-blue-100 text-sm font-medium">Total Messages</p>
                 <p class="text-white text-3xl font-bold" id="totalMessages">
-                    <%= stats.messages?.total || 0 %>
+                    <%= (stats && stats.messages && stats.messages.total) ? stats.messages.total : 0 %>
                 </p>
                 <div class="flex items-center mt-2">
                     <i data-lucide="trending-up" class="w-4 h-4 text-green-300 mr-1"></i>
-                    <span class="text-green-300 text-sm">+<span id="messagesToday"><%= stats.messages?.today || 0 %></span> today</span>
+                    <span class="text-green-300 text-sm">+<span id="messagesToday"><%= (stats && stats.messages && stats.messages.today) ? stats.messages.today : 0 %></span> today</span>
                 </div>
             </div>
             <div class="bg-blue-500 bg-opacity-30 p-3 rounded-lg">
@@ -40,11 +40,11 @@
             <div>
                 <p class="text-green-100 text-sm font-medium">Total Users</p>
                 <p class="text-white text-3xl font-bold" id="totalUsers">
-                    <%= stats.users?.total || 0 %>
+                    <%= (stats && stats.users && stats.users.total) ? stats.users.total : 0 %>
                 </p>
                 <div class="flex items-center mt-2">
                     <i data-lucide="user-plus" class="w-4 h-4 text-blue-300 mr-1"></i>
-                    <span class="text-blue-300 text-sm"><span id="activeUsers"><%= stats.users?.active || 0 %></span> active</span>
+                    <span class="text-blue-300 text-sm"><span id="activeUsers"><%= (stats && stats.users && stats.users.active) ? stats.users.active : 0 %></span> active</span>
                 </div>
             </div>
             <div class="bg-green-500 bg-opacity-30 p-3 rounded-lg">
@@ -58,7 +58,7 @@
             <div>
                 <p class="text-yellow-100 text-sm font-medium">Commands Used</p>
                 <p class="text-white text-3xl font-bold" id="totalCommands">
-                    <%= Object.values(stats.commands || {}).reduce((a, b) => a + b, 0) %>
+                    <%= (stats && stats.commands) ? Object.values(stats.commands).reduce((a, b) => a + b, 0) : 0 %>
                 </p>
                 <div class="flex items-center mt-2">
                     <i data-lucide="zap" class="w-4 h-4 text-yellow-300 mr-1"></i>
@@ -76,11 +76,11 @@
             <div>
                 <p class="text-purple-100 text-sm font-medium">Groups</p>
                 <p class="text-white text-3xl font-bold" id="totalGroups">
-                    <%= stats.groups?.total || 0 %>
+                    <%= (stats && stats.groups && stats.groups.total) ? stats.groups.total : 0 %>
                 </p>
                 <div class="flex items-center mt-2">
                     <i data-lucide="users" class="w-4 h-4 text-purple-300 mr-1"></i>
-                    <span class="text-purple-300 text-sm"><span id="activeGroups"><%= stats.groups?.active || 0 %></span> active</span>
+                    <span class="text-purple-300 text-sm"><span id="activeGroups"><%= (stats && stats.groups && stats.groups.active) ? stats.groups.active : 0 %></span> active</span>
                 </div>
             </div>
             <div class="bg-purple-500 bg-opacity-30 p-3 rounded-lg">
@@ -121,7 +121,7 @@
             <h2 class="text-xl font-semibold text-white">Top Commands</h2>
         </div>
         <div id="commandStats" class="space-y-4">
-            <% if (stats.commands && Object.keys(stats.commands).length > 0) { %>
+            <% if (stats && stats.commands && Object.keys(stats.commands).length > 0) { %>
                 <% Object.entries(stats.commands).sort((a, b) => b[1] - a[1]).slice(0, 10).forEach(function([command, count]) { %>
                     <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
                         <div class="flex items-center space-x-3">
@@ -154,281 +154,256 @@
             <h2 class="text-xl font-semibold text-white">Top Users</h2>
         </div>
         <div id="topUsers" class="space-y-4">
-            <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
+            <% if (stats && stats.topUsers && stats.topUsers.length > 0) { %>
+                <% stats.topUsers.slice(0, 5).forEach(function(user, index) { %>
+                    <%
+                        const gradients = [
+                            'from-blue-500 to-purple-600',
+                            'from-green-500 to-emerald-600',
+                            'from-yellow-500 to-orange-600',
+                            'from-pink-500 to-rose-600',
+                            'from-indigo-500 to-blue-600'
+                        ];
+                        const gradient = gradients[index] || gradients[0];
+                    %>
+                    <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r <%= gradient %> rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-white font-medium"><%= user.name || 'User #' + (index + 1) %></p>
+                                <p class="text-dark-400 text-sm"><%= user.number || 'Unknown' %></p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-white font-bold"><%= user.messageCount || 0 %></p>
+                            <p class="text-dark-400 text-sm">messages</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-white font-medium">User #1</p>
-                        <p class="text-dark-400 text-sm">+62812345678</p>
-                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="text-center py-8">
+                    <i data-lucide="users" class="w-16 h-16 text-dark-400 mx-auto mb-4"></i>
+                    <p class="text-dark-400">No user data available</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">156</p>
-                    <p class="text-dark-400 text-sm">messages</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div>
-                        <p class="text-white font-medium">User #2</p>
-                        <p class="text-dark-400 text-sm">+62812345679</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">142</p>
-                    <p class="text-dark-400 text-sm">messages</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center justify-between p-3 bg-dark-700 rounded-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div>
-                        <p class="text-white font-medium">User #3</p>
-                        <p class="text-dark-400 text-sm">+62812345680</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">98</p>
-                    <p class="text-dark-400 text-sm">messages</p>
-                </div>
-            </div>
+            <% } %>
         </div>
     </div>
 </div>
 
-<!-- System Performance -->
-<div class="bg-dark-800 rounded-xl border border-dark-700 p-6">
-    <div class="flex items-center space-x-2 mb-6">
-        <i data-lucide="cpu" class="w-5 h-5 text-green-400"></i>
-        <h2 class="text-xl font-semibold text-white">System Performance</h2>
-    </div>
-    
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-        <div class="text-center p-4 bg-dark-700 rounded-lg">
-            <p class="text-2xl font-bold text-blue-400">
-                <%= Math.floor(process.uptime() / 3600) %>h <%= Math.floor((process.uptime() % 3600) / 60) %>m
-            </p>
-            <p class="text-dark-400 text-sm">Uptime</p>
+<!-- Performance Metrics -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6">
+        <div class="flex items-center space-x-2 mb-6">
+            <i data-lucide="activity" class="w-5 h-5 text-green-400"></i>
+            <h2 class="text-xl font-semibold text-white">System Performance</h2>
         </div>
-        <div class="text-center p-4 bg-dark-700 rounded-lg">
-            <p class="text-2xl font-bold text-green-400" id="memoryUsage">
-                <%= Math.round(process.memoryUsage().heapUsed / 1024 / 1024) %>MB
-            </p>
-            <p class="text-dark-400 text-sm">Memory Usage</p>
-        </div>
-        <div class="text-center p-4 bg-dark-700 rounded-lg">
-            <p class="text-2xl font-bold text-purple-400">
-                <%= process.version %>
-            </p>
-            <p class="text-dark-400 text-sm">Node.js Version</p>
-        </div>
-        <div class="text-center p-4 bg-dark-700 rounded-lg">
-            <p class="text-2xl font-bold text-yellow-400">
-                <%= process.platform %>
-            </p>
-            <p class="text-dark-400 text-sm">Platform</p>
+        <div class="relative h-80">
+            <canvas id="performanceChart"></canvas>
         </div>
     </div>
     
-    <div class="relative h-64">
-        <canvas id="performanceChart"></canvas>
+    <div class="bg-dark-800 rounded-xl border border-dark-700 p-6">
+        <div class="flex items-center space-x-2 mb-6">
+            <i data-lucide="database" class="w-5 h-5 text-blue-400"></i>
+            <h2 class="text-xl font-semibold text-white">System Status</h2>
+        </div>
+        <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 bg-dark-700 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Bot Status</p>
+                        <p class="text-dark-400 text-sm">Online & Connected</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded-full">Active</span>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-dark-700 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-blue-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="cpu" class="w-6 h-6 text-blue-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Memory Usage</p>
+                        <p class="text-dark-400 text-sm" id="memoryUsage">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-dark-700 rounded-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-purple-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6 text-purple-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Uptime</p>
+                        <p class="text-dark-400 text-sm" id="uptime">Calculating...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Toast Container -->
 <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
+// Initialize charts
 let messageChart, messageTypeChart, performanceChart;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide icons
     lucide.createIcons();
-    
     initializeCharts();
     startRealTimeUpdates();
+    updateUptime();
+    setInterval(updateUptime, 1000);
 });
 
 function initializeCharts() {
-    // Configure Chart.js defaults for dark theme
-    Chart.defaults.color = '#9AA0A6';
-    Chart.defaults.borderColor = '#5F6368';
-    Chart.defaults.backgroundColor = 'rgba(102, 126, 234, 0.1)';
-
     // Message Activity Chart
-    const messageCtx = document.getElementById('messageChart').getContext('2d');
-    messageChart = new Chart(messageCtx, {
-        type: 'line',
-        data: {
-            labels: generateTimeLabels(),
-            datasets: [{
-                label: 'Messages',
-                data: generateSampleData(24),
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                tension: 0.4,
-                fill: true,
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
+    const messageCtx = document.getElementById('messageChart');
+    if (messageCtx) {
+        messageChart = new Chart(messageCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: generateTimeLabels(24),
+                datasets: [{
+                    label: 'Messages',
+                    data: generateSampleData(24),
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#3C4043'
-                    },
-                    ticks: {
-                        color: '#9AA0A6'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 },
-                x: {
-                    grid: {
-                        display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        },
+                        ticks: {
+                            color: 'rgb(156, 163, 175)'
+                        }
                     },
-                    ticks: {
-                        color: '#9AA0A6'
+                    x: {
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        },
+                        ticks: {
+                            color: 'rgb(156, 163, 175)'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
     // Message Type Chart
-    const typeCtx = document.getElementById('messageTypeChart').getContext('2d');
-    messageTypeChart = new Chart(typeCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Text', 'Image', 'Video', 'Audio', 'Document'],
-            datasets: [{
-                data: [65, 20, 8, 4, 3],
-                backgroundColor: [
-                    '#667eea',
-                    '#28a745',
-                    '#ffc107',
-                    '#dc3545',
-                    '#6c757d'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#9AA0A6',
-                        usePointStyle: true,
-                        padding: 20
+    const typeCtx = document.getElementById('messageTypeChart');
+    if (typeCtx) {
+        messageTypeChart = new Chart(typeCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Text', 'Image', 'Video', 'Audio', 'Document'],
+                datasets: [{
+                    data: [45, 25, 15, 10, 5],
+                    backgroundColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)',
+                        'rgb(245, 158, 11)',
+                        'rgb(139, 92, 246)',
+                        'rgb(236, 72, 153)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: 'rgb(156, 163, 175)',
+                            padding: 15
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
     // Performance Chart
-    const perfCtx = document.getElementById('performanceChart').getContext('2d');
-    performanceChart = new Chart(perfCtx, {
-        type: 'line',
-        data: {
-            labels: generateTimeLabels(12),
-            datasets: [{
-                label: 'Memory (MB)',
-                data: generateSampleData(12, 50, 150),
-                borderColor: '#28a745',
-                backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                yAxisID: 'y',
-                tension: 0.4,
-                borderWidth: 2
-            }, {
-                label: 'CPU (%)',
-                data: generateSampleData(12, 10, 80),
-                borderColor: '#ffc107',
-                backgroundColor: 'rgba(255, 193, 7, 0.1)',
-                yAxisID: 'y1',
-                tension: 0.4,
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#9AA0A6',
-                        usePointStyle: true
-                    }
-                }
+    const perfCtx = document.getElementById('performanceChart');
+    if (perfCtx) {
+        performanceChart = new Chart(perfCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: generateTimeLabels(20),
+                datasets: [{
+                    label: 'Memory (MB)',
+                    data: generateSampleData(20, 50, 150),
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'CPU (%)',
+                    data: generateSampleData(20, 10, 80),
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
             },
-            scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Memory (MB)',
-                        color: '#9AA0A6'
-                    },
-                    grid: {
-                        color: '#3C4043'
-                    },
-                    ticks: {
-                        color: '#9AA0A6'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'rgb(156, 163, 175)'
+                        }
                     }
                 },
-                y1: {
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    beginAtZero: true,
-                    max: 100,
-                    title: {
-                        display: true,
-                        text: 'CPU (%)',
-                        color: '#9AA0A6'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        },
+                        ticks: {
+                            color: 'rgb(156, 163, 175)'
+                        }
                     },
-                    grid: {
-                        drawOnChartArea: false,
-                    },
-                    ticks: {
-                        color: '#9AA0A6'
-                    }
-                },
-                x: {
-                    grid: {
-                        color: '#3C4043'
-                    },
-                    ticks: {
-                        color: '#9AA0A6'
+                    x: {
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.2)'
+                        },
+                        ticks: {
+                            color: 'rgb(156, 163, 175)'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 }
 
 function generateTimeLabels(hours = 24) {
@@ -452,10 +427,7 @@ function generateSampleData(count, min = 0, max = 100) {
 }
 
 function startRealTimeUpdates() {
-    // Update charts every 30 seconds
     setInterval(updateCharts, 30000);
-    
-    // Update performance metrics every 10 seconds
     setInterval(updatePerformanceMetrics, 10000);
 }
 
@@ -464,14 +436,12 @@ async function updateCharts() {
         const response = await fetch('/api/stats');
         const data = await response.json();
         
-        if (data.success) {
-            // Update overview cards
-            document.getElementById('totalMessages').textContent = data.data.messages?.total || 0;
-            document.getElementById('messagesToday').textContent = data.data.messages?.today || 0;
-            document.getElementById('totalUsers').textContent = data.data.users?.total || 0;
-            document.getElementById('activeUsers').textContent = data.data.users?.active || 0;
+        if (data.success && data.data) {
+            document.getElementById('totalMessages').textContent = (data.data.messages && data.data.messages.total) || 0;
+            document.getElementById('messagesToday').textContent = (data.data.messages && data.data.messages.today) || 0;
+            document.getElementById('totalUsers').textContent = (data.data.users && data.data.users.total) || 0;
+            document.getElementById('activeUsers').textContent = (data.data.users && data.data.users.active) || 0;
             
-            // Update charts with new data
             updateMessageChart();
             updatePerformanceChart();
         }
@@ -481,12 +451,12 @@ async function updateCharts() {
 }
 
 function updateMessageChart() {
-    // Add new data point and remove oldest
+    if (!messageChart) return;
+    
     const newData = Math.floor(Math.random() * 50);
     messageChart.data.datasets[0].data.push(newData);
     messageChart.data.datasets[0].data.shift();
     
-    // Update labels
     const now = new Date();
     const newLabel = now.getHours().toString().padStart(2, '0') + ':' + 
                     now.getMinutes().toString().padStart(2, '0');
@@ -497,7 +467,8 @@ function updateMessageChart() {
 }
 
 function updatePerformanceChart() {
-    // Simulate performance data
+    if (!performanceChart) return;
+    
     const memoryUsage = Math.floor(Math.random() * 100) + 50;
     const cpuUsage = Math.floor(Math.random() * 70) + 10;
     
@@ -521,7 +492,7 @@ async function updatePerformanceMetrics() {
         const response = await fetch('/api/status');
         const data = await response.json();
         
-        if (data.success) {
+        if (data.success && data.data && data.data.memoryUsage) {
             document.getElementById('memoryUsage').textContent = 
                 Math.round(data.data.memoryUsage.heapUsed / 1024 / 1024) + 'MB';
         }
@@ -530,32 +501,42 @@ async function updatePerformanceMetrics() {
     }
 }
 
+function updateUptime() {
+    const uptimeElement = document.getElementById('uptime');
+    if (uptimeElement) {
+        const uptime = process && process.uptime ? process.uptime() : 0;
+        const hours = Math.floor(uptime / 3600);
+        const minutes = Math.floor((uptime % 3600) / 60);
+        uptimeElement.textContent = `${hours}h ${minutes}m`;
+    }
+}
+
 function updateTimeRange() {
     const timeRange = document.getElementById('timeRange').value;
     
-    // Update chart data based on selected time range
     let hours;
     switch (timeRange) {
         case 'today':
             hours = 24;
             break;
         case 'week':
-            hours = 168; // 7 days
+            hours = 168;
             break;
         case 'month':
-            hours = 720; // 30 days
+            hours = 720;
             break;
         case 'year':
-            hours = 8760; // 365 days
+            hours = 8760;
             break;
         default:
             hours = 168;
     }
     
-    // Regenerate chart data
-    messageChart.data.labels = generateTimeLabels(Math.min(hours, 24));
-    messageChart.data.datasets[0].data = generateSampleData(Math.min(hours, 24));
-    messageChart.update();
+    if (messageChart) {
+        messageChart.data.labels = generateTimeLabels(Math.min(hours, 24));
+        messageChart.data.datasets[0].data = generateSampleData(Math.min(hours, 24));
+        messageChart.update();
+    }
     
     showToast(`Statistics updated for ${timeRange}`, 'info');
 }
@@ -593,8 +574,6 @@ function showToast(message, type = 'info') {
     `;
     
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
-    // Initialize icons and animate in
     lucide.createIcons();
     
     const toastElement = document.getElementById(toastId);
@@ -602,7 +581,6 @@ function showToast(message, type = 'info') {
         toastElement.classList.remove('translate-x-full');
     }, 100);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
         closeToast(toastId);
     }, 5000);
@@ -617,4 +595,4 @@ function closeToast(toastId) {
         }, 300);
     }
 }
-</script> 
+</script>

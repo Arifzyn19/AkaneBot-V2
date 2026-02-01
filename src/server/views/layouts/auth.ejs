@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,32 +10,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            50: '#f8f9fa',
-                            100: '#f1f3f4',
-                            200: '#e8eaed',
-                            300: '#dadce0',
-                            400: '#bdc1c6',
-                            500: '#9aa0a6',
-                            600: '#80868b',
-                            700: '#5f6368',
-                            800: '#3c4043',
-                            850: '#2d3134',
-                            900: '#202124',
-                            950: '#181818'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
-<body class="bg-dark-950 min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md px-6">
         <%- body %>
     </div>
