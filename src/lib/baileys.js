@@ -47,7 +47,7 @@ export class BaileysClient {
   }
 
   async initialize() {
-    console.log("🚀 Initializing WhatsApp Bot...")
+    console.log("Initializing WhatsApp Bot...")
 
     protoType()
 
@@ -66,7 +66,7 @@ export class BaileysClient {
         throw new Error("Auth state not initialized")
       }
 
-      this.sock = baileys.default({
+      this.sock = baileys({
         logger: this.logger.child({ level: "silent" }),
         browser: Browsers.ubuntu("Chrome"),
         printQRInTerminal: ENV.PRINT_QR || false,
@@ -97,6 +97,8 @@ export class BaileysClient {
         this.store.bind(this.sock.ev, {
           groupMetadata: this.sock.groupMetadata,
         })
+        
+        this.sock.store = this.store
       }
 
       this.sock = Client({ client: this.sock, store: this.store })
@@ -114,12 +116,12 @@ export class BaileysClient {
               console.log(gradient.passion("\n🔑 Your Pairing Code: "), chalk.bold.green(code))
               console.log(chalk.yellow(`📱 Open WhatsApp > Settings > Linked Devices > Link Device`))
             } catch (error) {
-              console.error("❌ Failed to request pairing code:", error.message)
+              console.error("Failed to request pairing code:", error.message)
               this.pairingCodeRequested = false
             }
           }, 3000)
         } else {
-          console.log(chalk.red("❌ PAIRING_NUMBER is required when USE_PAIRING_CODE is true"))
+          console.log(chalk.red("PAIRING_NUMBER is required when USE_PAIRING_CODE is true"))
         }
       }
 
@@ -132,13 +134,19 @@ export class BaileysClient {
       this.sock.ev.on("creds.update", this.saveCreds)
 
       // Handle messages
-      this.sock.ev.on("messages.upsert", async (m) => {
-        await this.handleMessages(m)
+      this.sock.ev.on("messages.upsert", async ({type, messages}) => {
+        if (type == "notify") { // new messages
+          for (const message of messages) {
+            await this.handleMessages({ messages: [message] })
+          }
+        } else { // old already seen / handled messages
+          // handle them however you want to
+        }	 
       })
-
+      
       return this.sock
     } catch (error) {
-      console.error("❌ Connection failed:", error)
+      console.error("Connection failed:", error)
     }
   }
 
@@ -155,7 +163,7 @@ export class BaileysClient {
       }
 
       if (this.qrRetries >= this.maxQrRetries) {
-        console.log("❌ Max QR retries reached. Exiting...")
+        console.log("Max QR retries reached. Exiting...")
         if (this.botInstance) {
           this.botInstance.emitToDashboard("bot:error", { error: "Max QR retries reached" })
         }
@@ -255,7 +263,7 @@ export class BaileysClient {
       this.isConnected = true
       this.qrRetries = 0
       this.pairingCodeRequested = false
-      console.log(gradient.morning("✅ Bot connected successfully!"))
+      console.log(gradient.morning("Bot connected successfully!"))
 
       if (this.botInstance) {
         this.botInstance.emitToDashboard("bot:status", {
@@ -273,20 +281,33 @@ export class BaileysClient {
       if (!msg || !msg.message) return
 
       if (this.botInstance) {
+        // Gunakan remoteJid atau remoteJidAlt
+        const chatId = msg.key.remoteJid || msg.key.remoteJidAlt
+        
         this.botInstance.emitToDashboard("message:received", {
-          from: msg.key.remoteJid,
+          from: chatId,
           message: msg.message,
           timestamp: msg.messageTimestamp,
           fromMe: msg.key.fromMe,
+          addressingMode: msg.key.addressingMode, // Tambahkan addressing mode
         })
       }
 
+      if (this.store?.groupMetadata && Object.keys(this.store.groupMetadata).length === 0) {
+        try {
+          this.store.groupMetadata = await this.sock.groupFetchAllParticipating()
+        } catch (error) {
+          console.warn("Failed to fetch group metadata:", error.message)
+          this.store.groupMetadata = {}
+        }
+      }
+      
       const { MessageHandler } = await import("../handlers/message.js")
-      const handler = new MessageHandler(this.sock)
+      const handler = new MessageHandler(this.sock, this.store)
 
       await handler.handle(msg)
     } catch (error) {
-      console.error("❌ Error handling message:", error)
+      console.error("Error handling message:", error)
       if (this.botInstance) {
         this.botInstance.emitToDashboard("bot:error", {
           error: "Message handling failed: " + error.message,

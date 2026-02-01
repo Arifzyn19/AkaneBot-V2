@@ -11,66 +11,75 @@ export default {
   aliases: ["help", "h"],
   permissions: ["all"],
 
-  execute: async (m, { sock, args }) => {
+  execute: async (m, { args }) => {
     const requestedCategory = args[0]?.toLowerCase();
     const commands = Object.values(plugins);
-    
+
     const categories = {};
-    commands.forEach((cmd) => {
-      const category = cmd.category || "general";
-      if (!categories[category]) {
-        categories[category] = [];
-      }
-      categories[category].push(cmd);
-    });
-
-    let menuText = `╭─「 *Akane Bot* 」\n`;
-    menuText += `│ 👋 Hello, ${m.pushName || "User"}!\n`;
-    menuText += `│ ⚡ Uptime: ${Function.formatUptime(process.uptime())}\n`;
-    menuText += `│ 📱 Prefix: ${m.prefix}\n`;
-    menuText += `│ 🤖 Enhanced Client: ✅\n`;
-    menuText += `╰────────────────\n\n`;
-
-    if (requestedCategory) { 
-      if (categories[requestedCategory]) {
-        menuText += `╭─「 *${requestedCategory.toUpperCase()}* 」\n`;
-        categories[requestedCategory].forEach((cmd) => {
-          const aliases = cmd.aliases ? ` (${cmd.aliases.join(", ")})` : "";
-          const commandName = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
-          const prefix = cmd.prefix === false ? '' : m.prefix;
-          menuText += `│ ${prefix}${commandName}${aliases}\n`;
-          menuText += `│   ${cmd.description || "No description"}\n`;
-          if (cmd.usage) menuText += `│   📖 ${cmd.usage}\n`;
-          if (cmd.cooldown) menuText += `│   ⏱️ Cooldown: ${cmd.cooldown}s\n`;
-        });
-        menuText += `╰────────────────\n`;
-      } else {
-        menuText += `❌ Category *${requestedCategory}* not found.\n\n`;
-        menuText += `Available categories:\n${Object.keys(categories)
-          .map((cat) => `• ${cat}`)
-          .join("\n")}`;
-      }
-    } else {
-      Object.keys(categories)
-        .sort()
-        .forEach((category) => {
-          menuText += `╭─「 *${category.toUpperCase()}* 」\n`;
-          categories[category].forEach((cmd) => {
-            const commandName = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
-            const prefix = cmd.prefix === false ? '' : m.prefix;
-            menuText += `│ ${prefix}${commandName} - ${cmd.description || "No description"}\n`;
-          });
-          menuText += `╰────────────────\n\n`;
-        });
-        
-      menuText += `🔧 *Tips:*\n`;
-      menuText += `• Use ${m.prefix}menu <category> for detailed info\n`;
-      menuText += `• Commands may have cooldowns\n`;
-      menuText += `• Some commands require special permissions\n`;
-      menuText += `• Try ${m.prefix}test to check client features`;
+    for (const cmd of commands) {
+      const cat = cmd.category || "general";
+      if (!categories[cat]) categories[cat] = [];
+      categories[cat].push(cmd);
     }
 
+    let menuText =
+`┌────────────────────────
+│        AKANE BOT
+├────────────────────────
+│ User   : ${m.pushName || "User"}
+│ Uptime : ${Function.formatUptime(process.uptime())}
+│ Prefix : ${m.prefix}
+└────────────────────────\n`;
+
+    // jika minta kategori tertentu
+    if (requestedCategory) {
+      const list = categories[requestedCategory];
+      if (!list) {
+        return m.reply(
+`Category "${requestedCategory}" tidak ditemukan.
+
+Daftar category:
+${Object.keys(categories).map(c => `- ${c}`).join("\n")}`
+        );
+      }
+
+      menuText += `\n[ ${requestedCategory.toUpperCase()} ]\n`;
+
+      for (const cmd of list) {
+        const name = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
+        const prefix = cmd.prefix === false ? "" : m.prefix;
+        const aliases = cmd.aliases?.length ? ` (${cmd.aliases.join(", ")})` : "";
+
+        menuText += `\n${prefix}${name}${aliases}`;
+        if (cmd.description) menuText += `\n  ${cmd.description}`;
+        if (cmd.usage) menuText += `\n  Example: ${cmd.usage.replace("!", m.prefix)}`;
+        if (cmd.cooldown) menuText += `\n  Cooldown: ${cmd.cooldown}s`;
+        menuText += "\n";
+      }
+
+      return m.reply(menuText);
+    }
+
+    // menu utama semua kategori
+    menuText += `\nCOMMAND LIST\n`;
+
+    for (const [category, list] of Object.entries(categories).sort()) {
+      const cmds = list
+        .map(cmd => {
+          const name = Array.isArray(cmd.command) ? cmd.command[0] : cmd.command;
+          return `${m.prefix}${name}\n`;
+        })
+        .join(", ");
+
+      menuText += `\n${category}
+  ${cmds}\n`;
+    }
+
+    menuText +=
+`\nUse:
+${m.prefix}menu <category>
+to show detailed commands in a category.`;
+
     await m.reply(menuText);
-    await m.react("📋");
   },
 };

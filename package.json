@@ -18,8 +18,9 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "@neoxr/api": "^1.5.3",
     "@rodrigogs/baileys-store": "^1.0.1",
-    "@whiskeysockets/baileys": "npm:techwiz-baileys@^6.8.6",
+    "@whiskeysockets/baileys": "npm:baileys@^7.0.0-rc.9",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "chalk": "^5.6.0",
@@ -39,6 +40,7 @@
     "helmet": "^8.1.0",
     "jimp": "^1.6.0",
     "libphonenumber-js": "^1.12.15",
+    "lodash": "^4.17.23",
     "lowdb": "^7.0.1",
     "mime-types": "^3.0.1",
     "moment-timezone": "^0.6.0",

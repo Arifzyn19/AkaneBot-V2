@@ -1,4 +1,4 @@
-const EventEmitter = require("events")
+import EventEmitter from "events";
 
 class BotMonitor extends EventEmitter {
   constructor(bot, io) {
@@ -313,4 +313,4 @@ class BotMonitor extends EventEmitter {
   }
 }
 
-module.exports = BotMonitor
+export default BotMonitor

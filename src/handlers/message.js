@@ -3,12 +3,14 @@ import { syncDatabase } from "../config/db.js";
 import { plugins } from "../lib/plugin.js";
 import { checkCooldown, setCooldown } from "../lib/utils.js";
 import { Serialize } from "../lib/client.js";
+import Api from "../config/api.js";
 import db from "../lib/database.js";
 import chalk from "chalk";
 
 export class MessageHandler {
-  constructor(sock) {
+  constructor(sock, store) {
     this.sock = sock;
+    this.store = store;
   }
 
   async handle(msg) {
@@ -20,7 +22,7 @@ export class MessageHandler {
       if (m.isBaileys) return;
 
       await syncDatabase(m, this.sock);
-
+    
       console.log(
         chalk.gray("📨"),
         chalk.greenBright("Message received from"),
@@ -40,6 +42,7 @@ export class MessageHandler {
         isOwner: m.isOwner,
         isAdmin: m.isAdmin,
         isGroup: m.isGroup,
+        Api,
       };
 
       await this.runBeforeHooks(m, context);
@@ -226,7 +229,7 @@ export class MessageHandler {
 
     if (plugin.isQuoted && !m.isQuoted) return "quoted";
 
-    if (m.isGroup && groupSettings) {
+    if (m.isGroup && group) {
       if (plugin.isNsfw && !group.isNsfw) return "nsfw";
       if (plugin.isGame && !group.isGame) return "game";
     }

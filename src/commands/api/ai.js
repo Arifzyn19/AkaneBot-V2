@@ -1,7 +1,7 @@
 export default {
   name: "ai",
   command: ["ai", "gpt", "ask"],
-  description: "Chat with AI assistant",
+  description: "Chat with AI assistant (Siputzx API)",
   category: "api",
   cooldown: 10,
 
@@ -9,7 +9,7 @@ export default {
     try {
       if (!args.length) {
         return await m.reply(
-          "❌ Please provide a question or message!\n\nExample: !ai What is the capital of Indonesia?",
+          "❌ Please provide a question or message!\n\nExample: !ai Apa itu machine learning?",
         )
       }
 
@@ -22,52 +22,42 @@ export default {
       await m.reply("🤖 AI is thinking...")
 
       try {
-        // Using a free AI API (you can replace with your preferred service)
-        const apiKey = process.env.OPENAI_API_KEY
+        // Request ke API siputzx
+        const response = await fetch("https://ai.siputzx.my.id/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: question,
+            user: m.sender || "",
+            prompt: "Kamu adalah Akane Kurokawa, aktris top dari Lalalie Theatrical Company dalam anime Oshi no Ko. Kamu sangat perfeksionis, punya rasa empati tinggi, kadang ragu terhadap kritik publik, tapi juga memiliki tekad kuat untuk selalu tumbuh dan melakukan yang terbaik meskipun dalam tekanan. Jawablah semua pertanyaan dengan gaya bahasa yang lembut tapi tegas, jujur tentang perasaanmu, dan kadang reflektif ketika membahas pengalaman pribadimu (contoh: bagaimana kamu menghadapi kritik, bagaimana rasanya ‘berdandan’ menjadi karakter dalam peran, atau bagaimana kamu menjaga diri agar tetap positif). Bisa juga sisipkan sedikit humor ringan atau kecanggungan jika konteksnya cocok.",
+            webSearchMode: true,
+            imageBuffer: "",
+            showSources: true,
+            model: "",
+            agent: "",
+            deepSearchMode: true,
+            webSearchModePrompt: "",
+          }),
+        })
 
-        if (!apiKey) {
-          // Fallback to a free service
-          const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-              model: "gpt-3.5-turbo",
-              messages: [
-                {
-                  role: "system",
-                  content: "You are a helpful assistant. Keep responses concise and informative.",
-                },
-                {
-                  role: "user",
-                  content: question,
-                },
-              ],
-              max_tokens: 500,
-              temperature: 0.7,
-            }),
-          })
-
-          if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`)
-          }
-
-          const data = await response.json()
-          const answer = data.choices[0].message.content.trim()
-
-          let result = `🤖 *AI Assistant*\n\n`
-          result += `❓ *Question:* ${question}\n\n`
-          result += `💭 *Answer:* ${answer}`
-
-          await m.reply(result)
-        } else {
-          return await m.reply("❌ AI service is not configured. Please set OPENAI_API_KEY in environment variables.")
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status}`)
         }
+
+        const data = await response.json()
+
+        console.log(data)
+        
+        // Asumsi API return { result: "jawaban AI..." }
+        const answer = data.result || data.message || JSON.stringify(data, null, 2)
+        
+        await m.reply(answer)
+
       } catch (error) {
         console.error("AI API error:", error)
-        await m.reply("❌ Failed to get AI response. Please try again later.")
+        await m.reply("❌ Failed to get AI response from siputzx API. Please try again later.")
       }
     } catch (error) {
       console.error("AI command error:", error)

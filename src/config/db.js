@@ -1,6 +1,7 @@
 import { ENV } from "./env.js";
 import db from "../lib/database.js";
 import baileys from "@whiskeysockets/baileys";
+import { jidNormalizedUser } from "../lib/helper.js";
 
 const validators = {
   isNumber: (x) => typeof x === "number" && !isNaN(x),
@@ -93,7 +94,7 @@ export function syncDatabase(m, client) {
   const botId = client.user?.jid || client.user?.id;
   if (!botId) return;
 
-  const numberBot = baileys.jidNormalizedUser(botId);
+  const numberBot = jidNormalizedUser(botId);
 
   let settings = db.data.settings[numberBot];
   if (!validators.isObject(settings)) {

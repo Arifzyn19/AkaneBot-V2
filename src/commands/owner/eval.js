@@ -12,7 +12,7 @@ export default {
   prefix: false,
   isOwner: true,
 
-  async execute(m, { text, sock }) {
+  async execute(m, { text, sock, Api }) {
     if (!text) {
       return m.reply("❌ Please provide code to execute!");
     }

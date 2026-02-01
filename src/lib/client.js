@@ -15,44 +15,15 @@ const {
   generateWAMessageFromContent,
   proto,
   prepareWAMessageMedia,
-  jidNormalizedUser,
   WA_DEFAULT_EPHEMERAL,
-  extractMessageContent,
-  areJidsSameUser,
 } = baileys;
+
+import { isNumber, getRandom, areJidsSameUser, jidNormalizedUser, jidDecode, extractMessageContent } from "./helper.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function toSHA256(str) {
   return Crypto.createHash("sha256").update(str).digest("hex");
-}
-
-function isNumber() {
-  const int = parseInt(this);
-  return typeof int === "number" && !isNaN(int);
-}
-
-function getRandom() {
-  if (Array.isArray(this) || this instanceof String)
-    return this[Math.floor(Math.random() * this.length)];
-  return Math.floor(Math.random() * this);
-}
-
-function jidDecode(jid) {
-  const sepIdx = typeof jid === "string" ? jid.indexOf("@") : -1;
-  if (sepIdx < 0) {
-    return undefined;
-  }
-  const server = jid.slice(sepIdx + 1);
-  const userCombined = jid.slice(0, sepIdx);
-  const [userAgent, device] = userCombined.split(":");
-  const user = userAgent.split("_")[0];
-  return {
-    server: server,
-    user,
-    domainType: server === "lid" ? 1 : 0,
-    device: device ? +device : undefined,
-  };
 }
 
 export function Client({ client: conn, store }) {
@@ -110,7 +81,8 @@ export function Client({ client: conn, store }) {
                 k.endsWith("Message") ||
                 k.endsWith("V2") ||
                 k.endsWith("V3")) &&
-              k !== "senderKeyDistributionMessage",
+              k !== "senderKeyDistributionMessage" &&
+              k !== "messageContextInfo",
           );
           return key;
         }
@@ -281,66 +253,17 @@ export function Client({ client: conn, store }) {
           data = {
             document: buffer,
             mimetype: mime,
+            fileName: options?.fileName
+              ? options.fileName
+              : `${conn.user?.name} (${new Date()}).${ext}`,
             ...options,
           };
 
         return await conn.sendMessage(jid, data, {
           quoted,
+          ephemeralExpiration: options?.expiration || 0,
           ...options,
         });
-      },
-      enumerable: true,
-    },
-
-    sendPoll: {
-      async value(chatId, name, values, options = {}) {
-        let selectableCount = options?.selectableCount
-          ? options.selectableCount
-          : 1;
-        return await conn.sendMessage(
-          chatId,
-          {
-            poll: {
-              name,
-              values,
-              selectableCount,
-            },
-            ...options,
-          },
-          { ...options },
-        );
-      },
-      enumerable: true,
-    },
-
-    reply: {
-      value(jid, text = "", quoted, options = {}) {
-        return conn.sendMessage(
-          jid,
-          {
-            text,
-            mentions: conn.parseMention(text),
-            ...options,
-          },
-          { quoted, ...options },
-        );
-      },
-    },
-
-    sendReact: {
-      async value(jid, text, key) {
-        return conn.sendMessage(jid, { react: { text: text, key: key } });
-      },
-    },
-
-    msToTime: {
-      value(ms) {
-        let h = isNaN(ms) ? "--" : Math.floor(ms / 3600000);
-        let m = isNaN(ms) ? "--" : Math.floor(ms / 60000) % 60;
-        let s = isNaN(ms) ? "--" : Math.floor(ms / 1000) % 60;
-        return [h + " Hours ", m + " Minutes ", s + " Second"]
-          .map((v) => v.toString().padStart(2, 0))
-          .join(" ");
       },
       enumerable: true,
     },
@@ -368,29 +291,47 @@ export function Serialize(conn, msg, store) {
 
   if (!msg.message) return;
   if (msg.key && msg.key.remoteJid == "status@broadcast") return;
-
+  
   m.message = extractMessageContent(msg.message);
 
   if (msg.key) {
     m.key = msg.key;
-    m.chat = m.key.remoteJid.startsWith("status")
-      ? jidNormalizedUser(m.key.participant)
-      : jidNormalizedUser(m.key.remoteJid);
-    m.fromMe = m.key.fromMe;
-    m.id = m.key.id;
+    
+    const chatJid = msg.key.remoteJid || msg.key.remoteJidAlt;
+    
+    m.chat = chatJid.startsWith("status")
+      ? jidNormalizedUser(msg.key.participant || msg.key.participantAlt)
+      : jidNormalizedUser(chatJid);
+    
+    m.fromMe = msg.key.fromMe;
+    m.id = msg.key.id;
     m.isBaileys =
       (m.id?.startsWith("3EB0") && m.id?.length === 22) ||
       m.id?.length === 16 ||
       false;
-    m.isGroup = m.chat.endsWith("@g.us");
-    m.participant = !m.isGroup ? false : m.key.participant;
-    m.sender = conn.decodeJid(
-      m.fromMe ? conn.user.id : m.isGroup ? m.participant : m.chat,
-    );
+      
+    m.isGroup = chatJid.endsWith("@g.us") || chatJid.endsWith("@lid");
+    
+    m.participant = !m.isGroup ? false : (msg.key.participant || msg.key.participantAlt || "");
+    
+    let senderJid;
+
+if (m.fromMe) {
+  senderJid = conn.user.id;
+} else if (m.isGroup) {
+  senderJid = m.key.participantAlt || m.key.participant || msg.key.remoteJidAlt || msg.key.remoteJid || m.chat;
+} else {
+  senderJid = m.chat;
+}
+
+m.sender = conn.decodeJid(senderJid);
+    
+    m.addressingMode = msg.key.addressingMode;
   }
 
   m.pushName = msg.pushName;
-
+  m.verifiedBizName = msg.verifiedBizName; 
+  
   const userNumber = m.sender.replace(/\D+/g, "");
   m.isOwner = ENV.OWNER_NUMBERS.includes(userNumber);
   m.isAdmin =
@@ -410,7 +351,7 @@ export function Serialize(conn, msg, store) {
     m.isGroupAdmin = !!m.admins.find((member) => member.id === m.sender);
     m.isBotAdmin = !!m.admins.find((member) => member.id === botNumber);
   }
-
+  
   if (m.message) {
     m.type = conn.getContentType(m.message) || Object.keys(m.message)[0];
     m.msg = extractMessageContent(m.message[m.type]) || m.message[m.type];
