@@ -16,7 +16,7 @@ WhatsApp Bot menggunakan Baileys dengan sistem command modular dan dual storage 
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/Arifzyn19/Akane-Bot-V2 whatsapp-bot
 cd whatsapp-bot
 
 # Install dependencies
