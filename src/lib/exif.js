@@ -98,7 +98,7 @@ async function writeExif(media, metadata) {
     const img = new webp.Image()
     const opt = {
       packId: metadata?.packId ? metadata.packId : 'https://nhentai.net',
-      packName: metadata?.packName ? metadata.packName : 'akanebot.xyz',
+      packName: metadata?.packName ? metadata.packName : 'arifzyn.my.id',
       packPublish: metadata?.packPublish ? metadata.packPublish : 'Arifzyn',
       packEmail: metadata?.packEmail ? metadata.packEmail : 'arifzyn906@gmail.com',
       packWebsite: metadata?.packWebsite ? metadata.packWebsite : 'https://nhentai.net',

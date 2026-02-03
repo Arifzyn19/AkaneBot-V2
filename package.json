@@ -19,6 +19,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.89",
     "@neoxr/api": "^1.5.3",
     "@rodrigogs/baileys-store": "^1.0.1",
     "@whiskeysockets/baileys": "npm:baileys@^7.0.0-rc.9",

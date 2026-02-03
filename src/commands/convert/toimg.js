@@ -2,42 +2,31 @@ export default {
   name: "toimg",
   command: ["toimg", "toimage", "img"],
   description: "Convert sticker to image",
-  category: "media",
+  category: "convert",
   cooldown: 5,
   isQuoted: true,
 
   async execute(m, { sock }) {
     try {
-      const quoted = m.quoted
+      const quoted = m.isQuoted ? m.quoted : m 
 
-      if (!quoted) {
-        return await m.reply("❌ Please reply to a sticker!")
+      if (!/webp/i.test(quoted?.msg?.mimetype)) {
+        return m.reply(`Balas stiker dengan perintah ${m.prefix + m.command}`)
       }
 
-      if (quoted.mtype !== "stickerMessage") {
-        return await m.reply("❌ Please reply to a sticker only!")
+      const { webp2mp4File } = await import("../../lib/exif.js")
+      
+      if (quoted.isAnimated) {
+        const mp4 = await webp2mp4File(await quoted.download())
+        return m.reply(mp4)
       }
+      
+      const buffer = await quoted.download()
+      return m.reply(buffer, { mimetype: "image/jpeg" })
 
-      await m.reply("🔄 Converting sticker to image...")
-
-      try {
-        const media = await quoted.download()
-
-        await sock.sendMessage(
-          m.chat,
-          {
-            image: media,
-            caption: "✅ Sticker converted to image",
-          },
-          { quoted: m },
-        )
-      } catch (error) {
-        console.error("Image conversion error:", error)
-        await m.reply("❌ Failed to convert sticker to image.")
-      }
     } catch (error) {
       console.error("ToImg command error:", error)
-      await m.reply("❌ An error occurred while converting the sticker.")
+      return m.reply("❌ Gagal mengkonversi stiker")
     }
   },
 }
