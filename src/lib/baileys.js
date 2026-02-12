@@ -157,16 +157,9 @@ export class BaileysClient {
       console.log(gradient.rainbow("\n📱 QR Code generated. Scan with WhatsApp:"))
       qrcode.generate(qr, { small: true })
       this.qrRetries++
-
-      if (this.botInstance) {
-        this.botInstance.emitToDashboard("bot:qr", { qr, retries: this.qrRetries })
-      }
-
+      
       if (this.qrRetries >= this.maxQrRetries) {
         console.log("Max QR retries reached. Exiting...")
-        if (this.botInstance) {
-          this.botInstance.emitToDashboard("bot:error", { error: "Max QR retries reached" })
-        }
         process.exit(1)
       }
     }
@@ -174,15 +167,7 @@ export class BaileysClient {
     if (connection === "close") {
       const reason = new Boom(lastDisconnect?.error)?.output.statusCode
       const statusCode = lastDisconnect?.error?.output?.statusCode || reason
-
-      if (this.botInstance) {
-        this.botInstance.emitToDashboard("bot:status", {
-          status: "disconnected",
-          reason: statusCode,
-          timestamp: Date.now(),
-        })
-      }
-
+      
       switch (statusCode) {
         case DisconnectReason.connectionClosed:
         case DisconnectReason.connectionLost:
@@ -264,14 +249,6 @@ export class BaileysClient {
       this.qrRetries = 0
       this.pairingCodeRequested = false
       console.log(gradient.morning("Bot connected successfully!"))
-
-      if (this.botInstance) {
-        this.botInstance.emitToDashboard("bot:status", {
-          status: "connected",
-          user: this.sock.user,
-          timestamp: Date.now(),
-        })
-      }
     }
   }
 
@@ -283,14 +260,6 @@ export class BaileysClient {
       if (this.botInstance) {
         // Gunakan remoteJid atau remoteJidAlt
         const chatId = msg.key.remoteJid || msg.key.remoteJidAlt
-        
-        this.botInstance.emitToDashboard("message:received", {
-          from: chatId,
-          message: msg.message,
-          timestamp: msg.messageTimestamp,
-          fromMe: msg.key.fromMe,
-          addressingMode: msg.key.addressingMode, // Tambahkan addressing mode
-        })
       }
 
       if (this.store?.groupMetadata && Object.keys(this.store.groupMetadata).length === 0) {
@@ -308,11 +277,6 @@ export class BaileysClient {
       await handler.handle(msg)
     } catch (error) {
       console.error("Error handling message:", error)
-      if (this.botInstance) {
-        this.botInstance.emitToDashboard("bot:error", {
-          error: "Message handling failed: " + error.message,
-        })
-      }
     }
   }
 
